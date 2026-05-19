@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <title>Sharefolio - Holdings</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Sharefolio">
+    <meta name="author" content="Ivan YeH">    
+    <!-- <link rel="shortcut icon" href="favicon.ico">  -->
+    
+    <!-- FontAwesome JS-->
+    <!-- <script defer src="assets/plugins/fontawesome/js/all.min.js"></script> -->
+    <script defer src="{{ url_for('static', filename='assets/plugins/fontawesome/js/all.min.js') }}"></script>
+    
+    <!-- App CSS -->  
+    <!-- <link id="theme-style" rel="stylesheet" href="assets/css/portal.css"> -->
+    <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/portal.css') }}">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head> 
+
+<body class="app">   	
+    <header class="app-header fixed-top">	   	            
+        <div class="app-header-inner">  
+	        <div class="container-fluid py-2">
+		        <div class="app-header-content"> 
+				    <div class="col-auto">
+					    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
+						    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img"><title>Menu</title><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+					    </a>
+				    </div>
+		        </div><!--//row-->
+	            </div><!--//app-header-content-->
+	        </div><!--//container-fluid-->
+        </div><!--//app-header-inner-->
+        <div id="app-sidepanel" class="app-sidepanel"> 
+	        <div id="sidepanel-drop" class="sidepanel-drop"></div>
+	        <div class="sidepanel-inner d-flex flex-column">
+		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
+		        <div class="app-branding">
+		            <a class="app-logo loading" href="/portfolio"><span class="logo-text">Sharefolio</span></a>
+		        </div><!--//app-branding-->  
+		        
+			    <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
+				    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
+					    <li class="nav-item">
+					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+					        <a class="nav-link loading" href="{{ url_for('portfolio') }}">
+						        <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span>
+		                        <span class="nav-link-text">Portfolio</span>
+					        </a><!--//nav-link-->
+					    </li><!--//nav-item-->
+					    
+					    <li class="nav-item">
+					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+					        <a class="nav-link active loading" href="{{ url_for('holdings') }}">
+								<span class="nav-icon" href><i class="fa-solid fa-hand-holding-dollar"></i></span>
+		                         <span class="nav-link-text">Holdings</span>
+					        </a><!--//nav-link-->
+					    </li><!--//nav-item-->
+						<li class="nav-item has-submenu">
+					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
+						        <span class="nav-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
+		                         <span class="nav-link-text">Transactions</span>
+		                         <span class="submenu-arrow">
+		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+	</svg>
+	                             </span><!--//submenu-arrow-->
+					        </a><!--//nav-link-->
+					        <div id="submenu-1" class="show submenu submenu-1" data-bs-parent="#menu-accordion">
+						        <ul class="submenu-list list-unstyled">
+							        <li class="submenu-item"><a class="submenu-link loading" href="{{ url_for('trades') }}">Trades</a></li>
+							        <li class="submenu-item"><a class="submenu-link loading" href="{{ url_for('incomes') }}">Incomes</a></li>
+						        </ul>
+					        </div>
+					    </li><!--//nav-item-->
+						
+						
+				    </ul><!--//app-menu-->
+			    </nav><!--//app-nav-->
+			    
+				<div class="app-sidepanel-footer">
+				    <nav class="app-nav app-nav-footer">
+					    <ul class="app-menu footer-menu list-unstyled">
+						    <li class="nav-item">
+						        <a class="nav-link" href="/info">
+							        <span class="nav-icon">
+										<i class="fa fa-info"></i>
+									</span>
+			                        <span class="nav-link-text">Information</span>
+						        </a><!--//nav-link-->
+						    </li><!--//nav-item-->
+						    <li class="nav-item">
+						        <a class="nav-link" href="/settings">
+							        <span class="nav-icon">
+										<i class="fa fa-cogs"></i>
+									</span>
+			                        <span class="nav-link-text">Settings</span>
+						        </a><!--//nav-link-->
+						    </li><!--//nav-item-->
+						    <li class="nav-item">
+						        <a class="nav-link" href="{{ url_for('logout') }}">
+							        <span class="nav-icon">
+										<i class="fa fa-sign-out"></i>
+									</span>
+			                        <span class="nav-link-text">Log out</span>
+						        </a><!--//nav-link-->
+						    </li><!--//nav-item-->
+					    </ul><!--//footer-menu-->
+				    </nav>
+			    </div><!--//app-sidepanel-footer-->
+		       
+	        </div><!--//sidepanel-inner-->
+	    </div><!--//app-sidepanel-->
+    </header><!--//app-header-->
+    
+    <div class="app-wrapper">
+	    <div class="container-xl">
+			<div class="app-content pt-3 p-md-3 p-lg-4">
+				<style>
+					/* Modern tab styles */
+					.tab-container {
+						max-width: 100%;
+						margin: 0 auto;
+					}
+
+					.tab-buttons {
+						display: flex;
+						gap: 1rem;
+						border-bottom: 2px solid #e0e0e0;
+						padding-bottom: 0.5rem;
+					}
+
+					.tab-buttons button {
+						background: #f5f5f5;
+						border: none;
+						padding: 10px 20px;
+						border-radius: 20px 20px 0 0;
+						cursor: pointer;
+						font-weight: 500;
+						transition: all 0.3s ease;
+						color: #333;
+					}
+
+					.tab-buttons button.active {
+						background: #a7ffd0;
+						border-bottom: 2px solid white;
+						box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+						color: #407436;
+					}
+
+					.tab-buttons button:hover {
+						background: #eaeaea;
+					}
+
+					.tab-content-modern {
+						background: white;
+						border-radius: 0 0 12px 12px;
+						box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+						padding: 2rem;
+						margin-top: -1px;
+					}
+
+					.tab-pane-modern {
+						display: none;
+					}
+
+					.tab-pane-modern.active {
+						display: block;
+					}
+
+					.sub-tabs {
+						margin-top: 1rem;
+						border-bottom: 1px solid #ddd;
+					}
+				</style>
+				<h1 class="app-page-title">Holdings Overview</h1>
+				<div class="tab-container">
+					<div class="tab-buttons">
+						<button class="active" data-tab="base-view">Base Currency Total View</button>
+						<button data-tab="multi-view">Asset Currency View</button>
+					</div>
+
+					<div class="tab-content-modern">
+						<div id="base-view" class="tab-pane-modern active">
+							<h4>Base Currency Total View</h4>
+							<p>All amounts are shown in your base currency (<strong>{{  base_currency  }}</strong>).</p>
+							<nav class="position-table-tab-base-currency app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4" role="tablist">
+								<a class="flex-sm-fill text-sm-center nav-link active" 
+								id="current-positions-base-currency-tab"
+								data-bs-toggle="tab"
+								href="#current-positions-base-currency"
+								role="tab"
+								aria-controls="current-positions-base-currency"
+								aria-selected="true">Current Positions</a>
+
+								<a class="flex-sm-fill text-sm-center nav-link" 
+								id="closed-positions-base-currency-tab"
+								data-bs-toggle="tab"
+								href="#closed-positions-base-currency"
+								role="tab"
+								aria-controls="closed-positions-base-currency"
+								aria-selected="false">Closed Positions</a>
+
+								<a class="flex-sm-fill text-sm-center nav-link" 
+								id="all-positions-base-currency-tab"
+								data-bs-toggle="tab"
+								href="#all-positions-base-currency"
+								role="tab"
+								aria-controls="all-positions-base-currency"
+								aria-selected="false">All Positions</a>
+							</nav>
+
+							<div class="tab-content" id="position-table-tab-base-currency-content">
+								<div class="tab-pane fade show active" id="current-positions-base-currency" role="tabpanel" aria-labelledby="current-positions-base-currency-tab">
+									<div class="app-card-body">
+										<div class="table-responsive">
+											<table class="table app-table-hover mb-0 text-left">
+												<thead>
+													<tr>
+														<th class="cell">Ticker</th>
+														<th class="cell">Currency</th>
+														<th class="cell">Price</th>
+														<th class="cell">Quantity</th>
+														<th class="cell">Value ({{ base_currency }})</th>
+														<th class="cell">Total Return ({{ base_currency }}) $</th>
+														<th class="cell">Total Return %</th>
+														<th class="cell"></th>
+													</tr>
+												</thead>
+												<tbody>
+												{% for asset in assets if asset.current_holdings != 0 %}
+													<tr>
+													<td class="cell">{{ asset.ticker or "N/A" }}</td>
+													<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
+
+													<td class="cell">
+														{% if asset.current_share_price is defined and asset.current_share_price is not none %}
+														{{ "{:,.2f}".format(asset.current_share_price) }} {{ asset.currency }}
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.current_holdings is defined and asset.current_holdings is not none %}
+														{{ "{:,.2f}".format(asset.current_holdings) }}
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.current_value_base_currency is defined and asset.current_value_base_currency is not none %}
+														{{ "{:,.2f}".format(asset.current_value_base_currency) }} 
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.total_return_dollar_base_currency is defined and asset.total_return_dollar_base_currency is not none %}
+														<span class="{{ 'text-success' if asset.total_return_dollar_base_currency >= 0 else 'text-danger' }}">
+															{{ "{:,.2f}".format(asset.total_return_dollar_base_currency) }}
+														</span>
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.total_return_pct_base_currency is defined and asset.total_return_pct_base_currency is not none %}
+														<span class="{{ 'text-success' if asset.total_return_pct_base_currency >= 0 else 'text-danger' }}">
+															{{ "{:,.2f}".format(asset.total_return_pct_base_currency * 100) }}%
+														</span>
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														<a class="btn app-btn-secondary loading" href="holdings/{{ asset.ticker }}">View</a>
+													</td>
+													</tr>
+												{% endfor %}
+												</tbody>
+
+											</table>
+										</div><!--//table-responsive-->
+									</div><!--//app-card-body-->		
+								</div>
+
+								<div class="tab-pane fade" id="closed-positions-base-currency" role="tabpanel" aria-labelledby="closed-positions-base-currency-tab">
+									<div class="app-card-body">
+										<div class="table-responsive">
+											<table class="table app-table-hover mb-0 text-left">
+												<thead>
+													<tr>
+														<th class="cell">Ticker</th>
+														<th class="cell">Currency</th>
+														<th class="cell">Price</th>
+														<th class="cell">Quantity</th>
+														<th class="cell">Value ({{ base_currency }})</th>
+														<th class="cell">Total Return ({{ base_currency }}) $</th>
+														<th class="cell">Total Return %</th>
+														<th class="cell"></th>
+													</tr>
+												</thead>
+												<tbody>
+												{% for asset in assets if asset.current_holdings == 0 %}
+													<tr>
+													<td class="cell">{{ asset.ticker or "N/A" }}</td>
+													<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
+
+													<td class="cell">
+														{% if asset.current_share_price is defined and asset.current_share_price is not none %}
+														{{ asset.current_share_price }} {{ asset.currency }} 
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.current_holdings is defined and asset.current_holdings is not none %}
+														{{ "{:,.2f}".format(asset.current_holdings) }}
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.current_value_base_currency is defined and asset.current_value_base_currency is not none %}
+														{{ "{:,.2f}".format(asset.current_value_base_currency) }}
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.total_return_dollar_base_currency is defined and asset.total_return_dollar_base_currency is not none %}
+														<span class="{{ 'text-success' if asset.total_return_dollar_base_currency >= 0 else 'text-danger' }}">
+															{{ "{:,.2f}".format(asset.total_return_dollar_base_currency) }}
+														</span>
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.total_return_pct_base_currency is defined and asset.total_return_pct_base_currency is not none %}
+														<span class="{{ 'text-success' if asset.total_return_pct_base_currency >= 0 else 'text-danger' }}">
+															{{ "{:,.2f}".format(asset.total_return_pct_base_currency * 100) }}%
+														</span>
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														<a class="btn app-btn-secondary loading" href="holdings/{{ asset.ticker }}">View</a>
+													</td>
+													</tr>
+												{% endfor %}
+												</tbody>
+
+											</table>
+										</div><!--//table-responsive-->
+									</div><!--//app-card-body-->	
+								</div>
+
+								<div class="tab-pane fade" id="all-positions-base-currency" role="tabpanel" aria-labelledby="all-positions-base-currency-tab">
+									<div class="app-card-body">
+										<div class="table-responsive">
+											<table class="table app-table-hover mb-0 text-left">
+												<thead>
+													<tr>
+														<th class="cell">Ticker</th>
+														<th class="cell">Currency</th>
+														<th class="cell">Price</th>
+														<th class="cell">Quantity</th>
+														<th class="cell">Value ({{ base_currency }})</th>
+														<th class="cell">Total Return ({{ base_currency }}) $</th>
+														<th class="cell">Total Return %</th>
+														<th class="cell"></th>
+													</tr>
+												</thead>
+												<tbody>
+												{% for asset in assets %}
+													<tr>
+													<td class="cell">{{ asset.ticker or "N/A" }}</td>
+													<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
+
+													<td class="cell">
+														{% if asset.current_share_price is defined and asset.current_share_price is not none %}
+														{{ "{:,.2f}".format(asset.current_share_price) }} {{ asset.currency }}
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.current_holdings is defined and asset.current_holdings is not none %}
+														{{ "{:,.2f}".format(asset.current_holdings) }}
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.current_value_base_currency is defined and asset.current_value_base_currency is not none %}
+														{{ "{:,.2f}".format(asset.current_value_base_currency) }}
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.total_return_dollar_base_currency is defined and asset.total_return_dollar_base_currency is not none %}
+														<span class="{{ 'text-success' if asset.total_return_dollar_base_currency >= 0 else 'text-danger' }}">
+															{{ "{:,.2f}".format(asset.total_return_dollar_base_currency) }}
+														</span>
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														{% if asset.total_return_pct_base_currency is defined and asset.total_return_pct_base_currency is not none %}
+														<span class="{{ 'text-success' if asset.total_return_pct_base_currency >= 0 else 'text-danger' }}">
+															{{ "{:,.2f}".format(asset.total_return_pct_base_currency * 100) }}%
+														</span>
+														{% else %}
+														N/A
+														{% endif %}
+													</td>
+
+													<td class="cell">
+														<a class="btn app-btn-secondary loading" href="holdings/{{ asset.ticker }}">View</a>
+													</td>
+													</tr>
+												{% endfor %}
+												</tbody>
+
+											</table>
+										</div><!--//table-responsive-->
+									</div><!--//app-card-body-->	
+								</div>
+							</div>
+
+						</div>
+
+						<div id="multi-view" class="tab-pane-modern">
+							<!-- <h4>Multi-Currency View</h4> -->
+							<style>
+								.subtab-buttons {
+									display: flex;
+									gap: 10px;
+									margin-bottom: 15px;
+								}
+
+								.subtab-buttons button {
+									padding: 8px 16px;
+									border: none;
+									background-color: #e0e0e0;
+									border-radius: 4px;
+									cursor: pointer;
+								}
+
+								.subtab-buttons button.active {
+									background-color: #00ff77d0;
+									color: black;
+								}
+
+								.subtab-content {
+									display: none;
+									padding: 15px;
+								}
+
+								.subtab-content.active {
+									display: block;
+								}
+							</style>
+							<h4>Asset Currency View</h4>
+							<p>All amounts are shown in the asset's traded currency.</p>
+							<div class="subtab-buttons">
+								{% for currency in currencies if portfolio_total_contribution_asset_currencies[currency] > 0 %}
+									<button class="subtab-btn" onclick="showCurrencyTab('{{ currency }}')">{{ currency }}</button>
+								{% endfor %}
+							</div>
+							{% for currency in currencies if portfolio_total_contribution_asset_currencies[currency] > 0 %}
+							<div class="subtab-content" id="currency-tab-{{ currency }}">
+								<!-- <p>Showing all <strong>{{ currency }}</strong> assets.</p> -->
+								<nav class="position-table-tab-asset-currency app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4" role="tablist">
+									<a class="flex-sm-fill text-sm-center nav-link active" 
+									id="current-positions-asset-currency-tab"
+									data-bs-toggle="tab"
+									href="#current-positions-asset-currency"
+									role="tab"
+									aria-controls="current-positions-asset-currency"
+									aria-selected="true">Current Positions</a>
+
+									<a class="flex-sm-fill text-sm-center nav-link" 
+									id="closed-positions-asset-currency-tab"
+									data-bs-toggle="tab"
+									href="#closed-positions-asset-currency"
+									role="tab"
+									aria-controls="closed-positions-asset-currency"
+									aria-selected="false">Closed Positions</a>
+
+									<a class="flex-sm-fill text-sm-center nav-link" 
+									id="all-positions-asset-currency-tab"
+									data-bs-toggle="tab"
+									href="#all-positions-asset-currency"
+									role="tab"
+									aria-controls="all-positions-asset-currency"
+									aria-selected="false">All Positions</a>
+								</nav>
+
+								<div class="tab-content" id="position-table-tab-asset-currency-content">
+									<div class="tab-pane fade show active" id="current-positions-asset-currency" role="tabpanel" aria-labelledby="current-positions-asset-currency-tab">
+										<div class="app-card-body">
+											<div class="table-responsive">
+												<table class="table app-table-hover mb-0 text-left">
+													<thead>
+														<tr>
+															<th class="cell">Ticker</th>
+															<th class="cell">Currency</th>
+															<th class="cell">Price</th>
+															<th class="cell">Quantity</th>
+															<th class="cell">Value ({{ currency }})</th>
+															<th class="cell">Total Return ({{ currency }})$</th>
+															<th class="cell">Total Return %</th>
+															<th class="cell"></th>
+														</tr>
+													</thead>
+													<tbody>
+													{% for asset in assets if asset.current_holdings != 0 and asset.currency == currency %}
+														<tr>
+														<td class="cell">{{ asset.ticker or "N/A" }}</td>
+														<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
+
+														<td class="cell">
+															{% if asset.current_share_price is defined and asset.current_share_price is not none %}
+															{{ "{:,.2f}".format(asset.current_share_price) }} {{ asset.currency }}
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.current_holdings is defined and asset.current_holdings is not none %}
+															{{ "{:,.2f}".format(asset.current_holdings) }}
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.current_value_asset_currency is defined and asset.current_value_asset_currency is not none %}
+															{{ "{:,.2f}".format(asset.current_value_asset_currency) }} 
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.total_return_dollar_asset_currency is defined and asset.total_return_dollar_asset_currency is not none %}
+															<span class="{{ 'text-success' if asset.total_return_dollar_asset_currency >= 0 else 'text-danger' }}">
+																{{ "{:,.2f}".format(asset.total_return_dollar_asset_currency) }}
+															</span>
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.total_return_pct_asset_currency is defined and asset.total_return_pct_asset_currency is not none %}
+															<span class="{{ 'text-success' if asset.total_return_pct_asset_currency >= 0 else 'text-danger' }}">
+																{{ "{:,.2f}".format(asset.total_return_pct_asset_currency * 100) }}%
+															</span>
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															<a class="btn app-btn-secondary loading" href="holdings/{{ asset.ticker }}">View</a>
+														</td>
+														</tr>
+													{% endfor %}
+													</tbody>
+
+												</table>
+											</div><!--//table-responsive-->
+										</div><!--//app-card-body-->		
+									</div>
+
+									<div class="tab-pane fade" id="closed-positions-asset-currency" role="tabpanel" aria-labelledby="closed-positions-asset-currency-tab">
+										<div class="app-card-body">
+											<div class="table-responsive">
+												<table class="table app-table-hover mb-0 text-left">
+													<thead>
+														<tr>
+															<th class="cell">Ticker</th>
+															<th class="cell">Currency</th>
+															<th class="cell">Price</th>
+															<th class="cell">Quantity</th>
+															<th class="cell">Value ({{ currency }})</th>
+															<th class="cell">Total Return ({{ currency }}) $</th>
+															<th class="cell">Total Return %</th>
+															<th class="cell"></th>
+														</tr>
+													</thead>
+													<tbody>
+													{% for asset in assets if (asset.current_holdings == 0 and asset.currency == currency) %}
+														<tr>
+														<td class="cell">{{ asset.ticker or "N/A" }}</td>
+														<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
+
+														<td class="cell">
+															{% if asset.current_share_price is defined and asset.current_share_price is not none %}
+															{{ "{:,.2f}".format(asset.current_share_price) }} {{ asset.currency }} 
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.current_holdings is defined and asset.current_holdings is not none %}
+															{{ "{:,.2f}".format(asset.current_holdings) }}
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.current_value_asset_currency is defined and asset.current_value_asset_currency is not none %}
+															{{ "{:,.2f}".format(asset.current_value_asset_currency) }}
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.total_return_dollar_asset_currency is defined and asset.total_return_dollar_asset_currency is not none %}
+															<span class="{{ 'text-success' if asset.total_return_dollar_asset_currency >= 0 else 'text-danger' }}">
+																{{ "{:,.2f}".format(asset.total_return_dollar_asset_currency) }}
+															</span>
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.total_return_pct_asset_currency is defined and asset.total_return_pct_asset_currency is not none %}
+															<span class="{{ 'text-success' if asset.total_return_pct_asset_currency >= 0 else 'text-danger' }}">
+																{{ "{:,.2f}".format(asset.total_return_pct_asset_currency * 100) }}%
+															</span>
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															<a class="btn app-btn-secondary loading" href="holdings/{{ asset.ticker }}">View</a>
+														</td>
+														</tr>
+													{% endfor %}
+													</tbody>
+
+												</table>
+											</div><!--//table-responsive-->
+										</div><!--//app-card-body-->	
+									</div>
+
+									<div class="tab-pane fade" id="all-positions-asset-currency" role="tabpanel" aria-labelledby="all-positions-asset-currency-tab">
+										<div class="app-card-body">
+											<div class="table-responsive">
+												<table class="table app-table-hover mb-0 text-left">
+													<thead>
+														<tr>
+															<th class="cell">Ticker</th>
+															<th class="cell">Currency</th>
+															<th class="cell">Price</th>
+															<th class="cell">Quantity</th>
+															<th class="cell">Value ({{ currency }})</th>
+															<th class="cell">Total Return ({{ currency }}) $</th>
+															<th class="cell">Total Return %</th>
+															<th class="cell"></th>
+														</tr>
+													</thead>
+													<tbody>
+													{% for asset in assets if asset.currency == currency %}
+														<tr>
+														<td class="cell">{{ asset.ticker or "N/A" }}</td>
+														<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
+
+														<td class="cell">
+															{% if asset.current_share_price is defined and asset.current_share_price is not none %}
+															{{ "{:,.2f}".format(asset.current_share_price) }} {{ asset.currency }}
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.current_holdings is defined and asset.current_holdings is not none %}
+															{{ "{:,.2f}".format(asset.current_holdings) }}
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.current_value_asset_currency is defined and asset.current_value_asset_currency is not none %}
+															{{ "{:,.2f}".format(asset.current_value_asset_currency) }}
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.total_return_dollar_asset_currency is defined and asset.total_return_dollar_asset_currency is not none %}
+															<span class="{{ 'text-success' if asset.total_return_dollar_asset_currency >= 0 else 'text-danger' }}">
+																{{ "{:,.2f}".format(asset.total_return_dollar_asset_currency) }}
+															</span>
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															{% if asset.total_return_pct_asset_currency is defined and asset.total_return_pct_asset_currency is not none %}
+															<span class="{{ 'text-success' if asset.total_return_pct_asset_currency >= 0 else 'text-danger' }}">
+																{{ "{:,.2f}".format(asset.total_return_pct_asset_currency * 100) }}%
+															</span>
+															{% else %}
+															N/A
+															{% endif %}
+														</td>
+
+														<td class="cell">
+															<a class="btn app-btn-secondary loading" href="holdings/{{ asset.ticker }}">View</a>
+														</td>
+														</tr>
+													{% endfor %}
+													</tbody>
+
+												</table>
+											</div><!--//table-responsive-->
+										</div><!--//app-card-body-->	
+									</div>
+								</div>
+								
+							</div>
+							{% endfor %}
+
+							<script>
+								function showCurrencyTab(currency) {
+									const contents = document.querySelectorAll('.subtab-content');
+									const buttons = document.querySelectorAll('.subtab-btn');
+
+									contents.forEach(c => c.classList.remove('active'));
+									buttons.forEach(b => b.classList.remove('active'));
+
+									document.getElementById('currency-tab-' + currency).classList.add('active');
+
+									const selectedButton = Array.from(buttons).find(btn => btn.textContent === currency);
+									if (selectedButton) {
+										selectedButton.classList.add('active');
+									}
+								}
+
+								// Show first currency subtab by default
+								window.onload = () => {
+									{% if currencies %}
+										showCurrencyTab("{{ currencies[0] }}");
+									{% endif %}
+								};
+							</script>
+
+						</div>
+					</div>
+				</div>
+
+				<script>
+					{% raw %}
+					// Main Tabs: Base vs Multi
+					document.querySelectorAll('.tab-buttons:not(.sub-tabs) button').forEach(button => {
+						button.addEventListener('click', () => {
+							// Remove active from all main tab buttons and panes
+							document.querySelectorAll('.tab-buttons:not(.sub-tabs) button').forEach(btn => btn.classList.remove('active'));
+							document.querySelectorAll('.tab-content-modern > .tab-pane-modern').forEach(pane => pane.classList.remove('active'));
+
+							// Activate selected main tab
+							button.classList.add('active');
+							document.getElementById(button.getAttribute('data-tab')).classList.add('active');
+						});
+					});
+					{% endraw %}
+				</script>
+			</div>
+		</div>
+	    
+	    <footer class="app-footer">
+		    <div class="container text-center py-3">
+		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
+            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small>
+		       
+		    </div>
+	    </footer><!--//app-footer-->
+	    
+    </div><!--//app-wrapper-->    					
+
+
+	<!-- JavaScript -->
+	<script src="{{ url_for('static', filename='assets/plugins/popper.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+
+	<!-- Charts JS -->
+	<script src="{{ url_for('static', filename='assets/plugins/chart.js/chart.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='assets/js/index-charts.js') }}"></script>
+
+	<!-- Page-Specific JS -->
+	<script src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+
+	{% include "loading.html" %}
+
+</body>
+</html> 
+

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <title>Sharefolio</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="">
+    <meta name="author" content="Ivan YeH">    
+    <!-- <link rel="shortcut icon" href="favicon.ico">  -->
+    
+    <!-- FontAwesome JS-->
+    <!-- <script defer src="assets/plugins/fontawesome/js/all.min.js"></script> -->
+    <script defer src="{{ url_for('static', filename='assets/plugins/fontawesome/js/all.min.js') }}"></script>
+    
+    <!-- App CSS -->  
+    <!-- <link id="theme-style" rel="stylesheet" href="assets/css/portal.css"> -->
+    <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/portal.css') }}">
+
+</head> 
+
+<body class="app">   	
+    <header class="app-header fixed-top">	   	            
+        <div class="app-header-inner">  
+	        <div class="container-fluid py-2">
+		        <div class="app-header-content"> 
+				    <div class="col-auto">
+					    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
+						    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img"><title>Menu</title><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+					    </a>
+				    </div>
+		        </div><!--//row-->
+	            </div><!--//app-header-content-->
+	        </div><!--//container-fluid-->
+        </div><!--//app-header-inner-->
+        <div id="app-sidepanel" class="app-sidepanel"> 
+	        <div id="sidepanel-drop" class="sidepanel-drop"></div>
+	        <div class="sidepanel-inner d-flex flex-column">
+		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
+		        <div class="app-branding">
+		            <a class="app-logo" href=""><span class="logo-text">Sharefolio</span></a>
+		        </div><!--//app-branding-->  
+		        
+				<nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
+				    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
+					    <li class="nav-item">
+					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+					        <a class="nav-link active" href="{{ url_for('portfolio') }}">
+						        <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span>
+		                        <span class="nav-link-text">Portfolio</span>
+					        </a><!--//nav-link-->
+					    </li><!--//nav-item-->
+					    
+					    <li class="nav-item">
+					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+					        <a class="nav-link" href="{{ url_for('holdings') }}">
+								<span class="nav-icon" href><i class="fa-solid fa-hand-holding-dollar"></i></span>
+		                         <span class="nav-link-text">Holdings</span>
+					        </a><!--//nav-link-->
+					    </li><!--//nav-item-->
+						<li class="nav-item has-submenu">
+					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
+						        <span class="nav-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
+		                         <span class="nav-link-text">Transactions</span>
+		                         <span class="submenu-arrow">
+		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+	</svg>
+	                             </span><!--//submenu-arrow-->
+					        </a><!--//nav-link-->
+					        <div id="submenu-1" class="show submenu submenu-1" data-bs-parent="#menu-accordion">
+						        <ul class="submenu-list list-unstyled">
+							        <li class="submenu-item"><a class="submenu-link" href="{{ url_for('trades') }}">Trades</a></li>
+							        <li class="submenu-item"><a class="submenu-link" href="{{ url_for('incomes') }}">Incomes</a></li>
+						        </ul>
+					        </div>
+					    </li><!--//nav-item-->
+						
+						
+				    </ul><!--//app-menu-->
+			    </nav><!--//app-nav-->
+			    
+				<div class="app-sidepanel-footer">
+				    <nav class="app-nav app-nav-footer">
+					    <ul class="app-menu footer-menu list-unstyled">
+						    <li class="nav-item">
+						        <a class="nav-link" href="">
+							        <span class="nav-icon">
+										<i class="fa fa-info"></i>
+									</span>
+			                        <span class="nav-link-text">Information</span>
+						        </a><!--//nav-link-->
+						    </li><!--//nav-item-->
+						    <li class="nav-item">
+						        <a class="nav-link" href="">
+							        <span class="nav-icon">
+										<i class="fa fa-cogs"></i>
+									</span>
+			                        <span class="nav-link-text">Settings</span>
+						        </a><!--//nav-link-->
+						    </li><!--//nav-item-->
+						    <li class="nav-item">
+						        <a class="nav-link" href="">
+							        <span class="nav-icon">
+										<i class="fa fa-sign-out"></i>
+									</span>
+			                        <span class="nav-link-text">Log out</span>
+						        </a><!--//nav-link-->
+						    </li><!--//nav-item-->
+					    </ul><!--//footer-menu-->
+				    </nav>
+			    </div><!--//app-sidepanel-footer-->
+		       
+	        </div><!--//sidepanel-inner-->
+	    </div><!--//app-sidepanel-->
+    </header><!--//app-header-->
+    
+    <div class="app-wrapper">
+	    <div class="container-xl">
+			<div class="app-content pt-3 p-md-3 p-lg-4">
+				<style>
+					/* Modern tab styles */
+					.tab-container {
+						max-width: 100%;
+						margin: 0 auto;
+					}
+
+					.tab-buttons {
+						display: flex;
+						gap: 1rem;
+						border-bottom: 2px solid #e0e0e0;
+						padding-bottom: 0.5rem;
+					}
+
+					.tab-buttons button {
+						background: #f5f5f5;
+						border: none;
+						padding: 10px 20px;
+						border-radius: 20px 20px 0 0;
+						cursor: pointer;
+						font-weight: 500;
+						transition: all 0.3s ease;
+						color: #333;
+					}
+
+					.tab-buttons button.active {
+						background: white;
+						border-bottom: 2px solid white;
+						box-shadow: 0 -2px 6px rgba(0,0,0,0.08);
+						color: #007bff;
+					}
+
+					.tab-buttons button:hover {
+						background: #eaeaea;
+					}
+
+					.tab-content-modern {
+						background: white;
+						border-radius: 0 0 12px 12px;
+						box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+						padding: 2rem;
+						margin-top: -1px;
+					}
+
+					.tab-pane-modern {
+						display: none;
+					}
+
+					.tab-pane-modern.active {
+						display: block;
+					}
+
+					.sub-tabs {
+						margin-top: 1rem;
+						border-bottom: 1px solid #ddd;
+					}
+
+					.sub-tabs button {
+						background: #f0f0f0;
+						padding: 8px 16px;
+						border-radius: 12px 12px 0 0;
+						font-size: 0.9rem;
+					}
+
+					.sub-tabs button.active {
+						background: #fff;
+						color: #007bff;
+						border-bottom: 2px solid white;
+						box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
+					}
+				</style>
+				<h1 class="app-page-title">Portfolio</h1>
+				<div class="tab-container">
+					<div class="tab-buttons">
+						<button class="active" data-tab="base-view">Base Currency</button>
+						<button data-tab="multi-view">Multi-Currency</button>
+					</div>
+
+					<div class="tab-content-modern">
+						<div id="base-view" class="tab-pane-modern active">
+							<h4>Base Currency View</h4>
+							<p>The Base Currency View shows all assets in your base currency. All portfolio metrics and amounts are aggregated and denoted in your base currency.</p>
+						</div>
+
+						<div id="multi-view" class="tab-pane-modern">
+						<h4>Multi-Currency View</h4>
+
+						<!-- Currency Sub Tabs -->
+						<div class="tab-buttons sub-tabs">
+							<button class="active" data-tab="usd-tab">USD</button>
+							<button data-tab="aud-tab">AUD</button>
+							<button data-tab="cad-tab">CAD</button>
+							<button data-tab="twd-tab">TWD</button>
+						</div>
+
+						<div class="tab-content-modern">
+							<div id="usd-tab" class="tab-pane-modern active">
+								<p>USD portfolio data or chart here.</p>
+							</div>
+							<div id="aud-tab" class="tab-pane-modern">
+								<p>AUD portfolio data or chart here.</p>
+							</div>
+							<div id="cad-tab" class="tab-pane-modern">
+								<p>CAD portfolio data or chart here.</p>
+							</div>
+							<div id="twd-tab" class="tab-pane-modern">
+								<p>TWD portfolio data or chart here.</p>
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+
+				<script>
+					{% raw %}
+					// Main Tabs: Base vs Multi
+					document.querySelectorAll('.tab-buttons:not(.sub-tabs) button').forEach(button => {
+						button.addEventListener('click', () => {
+							// Remove active from all main tab buttons and panes
+							document.querySelectorAll('.tab-buttons:not(.sub-tabs) button').forEach(btn => btn.classList.remove('active'));
+							document.querySelectorAll('.tab-content-modern > .tab-pane-modern').forEach(pane => pane.classList.remove('active'));
+
+							// Activate selected main tab
+							button.classList.add('active');
+							document.getElementById(button.getAttribute('data-tab')).classList.add('active');
+						});
+					});
+
+					// Sub-Tabs: USD, AUD, CAD, TWD
+					document.querySelectorAll('.sub-tabs button').forEach(button => {
+						button.addEventListener('click', () => {
+							// Remove active from all sub-tab buttons and sub-tab panes
+							document.querySelectorAll('.sub-tabs button').forEach(btn => btn.classList.remove('active'));
+							document.querySelectorAll('#multi-view .tab-content-modern .tab-pane-modern').forEach(pane => pane.classList.remove('active'));
+
+							// Activate selected sub-tab
+							button.classList.add('active');
+							document.getElementById(button.getAttribute('data-tab')).classList.add('active');
+						});
+					});
+					{% endraw %}
+				</script>
+
+
+
+
+
+
+			</div>
+		</div>
+	    
+	    <footer class="app-footer">
+		    <div class="container text-center py-3">
+		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
+            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small>
+		       
+		    </div>
+	    </footer><!--//app-footer-->
+	    
+    </div><!--//app-wrapper-->    					
+
+
+	<!-- JavaScript -->
+	<script src="{{ url_for('static', filename='assets/plugins/popper.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+
+	<!-- Charts JS -->
+	<script src="{{ url_for('static', filename='assets/plugins/chart.js/chart.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='assets/js/index-charts.js') }}"></script>
+
+	<!-- Page-Specific JS -->
+	<script src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+
+
+</body>
+</html> 
+

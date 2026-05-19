@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Chatbot</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f9f9f9; }
+        #chatbox { width: 400px; margin: 50px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .msg { margin: 10px 0; }
+        .user { text-align: right; color: green; }
+        .bot { text-align: left; color: blue; }
+        input[type="text"] { width: 75%; padding: 8px; }
+        button { padding: 8px 12px; }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <div id="messages"></div>
+        <input type="text" id="user-input" placeholder="Type your message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById("user-input");
+            const message = input.value.trim();
+            if (!message) return;
+
+            appendMessage("You", message, "user");
+            input.value = "";
+
+            const res = await fetch("/get", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await res.json();
+            appendMessage("Bot", data.response, "bot");
+        }
+
+        function appendMessage(sender, text, className) {
+            const messages = document.getElementById("messages");
+            const msg = document.createElement("div");
+            msg.className = `msg ${className}`;
+            msg.innerHTML = `<strong>${sender}:</strong><br>` + marked.parse(text);
+            messages.appendChild(msg);
+            messages.scrollTop = messages.scrollHeight;
+        }
+    </script>
+</body>
+</html>

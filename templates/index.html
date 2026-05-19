@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Sharefolio - Investment Tracker</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{{ url_for('static', filename='css/styles.css') }}"  rel="stylesheet" />
+    </head>
+    <body class="d-flex flex-column h-100">
+        <main class="flex-shrink-0">
+            <!-- Header-->
+            <header class="bg-dark py-5">
+                <div class="container px-5">
+                    <div class="row gx-5 align-items-center justify-content-center">
+                        <div class="col-lg-8 col-xl-7 col-xxl-6">
+                            <div class="my-5 text-center text-xl-start">
+                                <h1 class="display-5 fw-bolder text-white mb-2">Sharefolio</h1>
+                                <p class="lead fw-normal text-white-50 mb-4">Personal investment management made easy!</p>
+                                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                                    <a class="btn btn-primary btn-lg px-4 me-sm-3 loading" href="/login">Log in</a>
+                                    <a class="btn btn-outline-light btn-lg px-4 loading" href="/signup">Sign up</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Features section-->
+            <section class="py-5" id="features">
+                <div class="container px-5 my-5">
+                    <div class="row gx-5">
+                        <div class="col-lg-4 mb-5 mb-lg-0"><h2 class="fw-bolder mb-0">Your investments deserve better than spreadsheets.</h2></div>
+                        <div class="col-lg-8">
+                            <div class="row gx-5 row-cols-1 row-cols-md-2">
+                                <div class="col mb-5 h-100">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-globe"></i></div>
+                                    <h2 class="h5">International Markets</h2>
+                                    <p class="mb-0">Sharefolio supports securities traded on the ASX, NYSE, NASDAQ, TSX, TWSE and Taiwan OTC markets.</p>
+                                </div>
+                                <div class="col mb-5 h-100">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-bank2"></i></div>
+                                    <h2 class="h5">Listed & Unlisted Securities</h2>
+                                    <p class="mb-0">Sharefolio automatically fetches price data for listed securities. What's more, you can also bookkeep unlisted securities & assets.</p>
+                                </div>
+                                <div class="col mb-5 mb-md-0 h-100">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-currency-exchange"></i></i></div>
+                                    <h2 class="h5">Auto FX Conversion</h2>
+                                    <p class="mb-0">Sharefolio supports assets traded in AUD, USD, CAD and TWD. You can track your portfolio in asset currencies and your base currency without needing to convert currencies manually.</p>
+                                </div>
+                                <div class="col h-100">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-toggles2"></i></div>
+                                    <h2 class="h5">Easy Insights</h2>
+                                    <p class="mb-0">Sharefolio analyses your portfolio automatically based on the transactions you provide, so you don't have to work out the maths yourself!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Testimonial section-->
+            <div class="py-5 bg-light">
+                <div class="container px-5 my-5">
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-lg-10 col-xl-7">
+                            <div class="text-center">
+                                <p>Developed by <a href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a>, Sharefolio is the next-generation upgrade to Sharefolio Analyser ASX</p>
+                                <hr>
+                                <div class="fs-4 mb-4 fst-italic">"Sharefolio Analyser ASX won the Best Undergraduate Junior Project Award 2023"</div>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="fw-bold">
+                                        Citadel Securities, Australia
+                                    </div>
+                                </div>
+                                <a href="https://ivan-yeh.github.io/sharefolio.html" target="_blank">More Details</a>
+                                <hr>
+                                <p>Now with international market coverage, multi-currency support and an enhanced interface built for smarter investing.</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- Footer-->
+        <footer class="bg-dark py-4 mt-auto">
+            <div class="container px-5">
+                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                    <div class="col-auto"><div class="small m-0 text-white">Copyright &copy; Sharefolio {{ year }}</div></div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+
+        {% include "loading.html" %}
+
+    </body>
+</html>

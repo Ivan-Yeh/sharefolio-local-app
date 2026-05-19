@@ -1,0 +1,60 @@
+<!-- Loading Screen -->
+<div id="loading-screen">
+    <div class="spinner"></div>
+</div>
+
+<style>
+/* Hidden by default */
+#loading-screen {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Show screen when active */
+#loading-screen.show {
+    display: flex;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #ccc;
+    border-top: 6px solid #00b764;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+function showLoading() {
+    const loadingScreen = document.getElementById("loading-screen");
+    if (loadingScreen) loadingScreen.classList.add("show");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Show loading screen on .loading element clicks
+    document.querySelectorAll(".loading").forEach(el => {
+    el.addEventListener("click", () => {
+        showLoading();
+    });
+    });
+
+    // Show loading screen on page unload (refresh or navigation)
+    window.addEventListener("beforeunload", () => {
+    showLoading();
+    });
+});
+</script>

@@ -274,6 +274,7 @@ class Asset:
         if periodic_df.empty:
             return periodic_df
 
+        # periodic cumulative performance metrics
         base_cols = [
             "period",
             "holdings",
@@ -288,6 +289,7 @@ class Asset:
         ]
         performance_df = periodic_df[base_cols].copy()
 
+        # periodic performance metrics
         performance_df["total_pnl"] = performance_df["realised_pnl"] + performance_df["unrealised_pnl"]
         performance_df["realised_pnl_pct"] = self._safe_pct(performance_df["realised_pnl"], performance_df["commitment"])
         performance_df["unrealised_pnl_pct"] = self._safe_pct(performance_df["unrealised_pnl"], performance_df["commitment"])
