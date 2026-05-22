@@ -1,219 +1,397 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
-    <title>Sharefolio - Information</title>
-    
-    <!-- Meta -->
+    <title>Sharefolio - Help &amp; FAQ</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <meta name="description" content="Sharefolio">
-    <meta name="author" content="Ivan YeH">    
-    <!-- <link rel="shortcut icon" href="favicon.ico">  -->
-    
-    <!-- FontAwesome JS-->
-    <!-- <script defer src="assets/plugins/fontawesome/js/all.min.js"></script> -->
+    <meta name="author" content="Ivan YeH">
     <script defer src="{{ url_for('static', filename='assets/plugins/fontawesome/js/all.min.js') }}"></script>
-    
-    <!-- App CSS -->  
-    <!-- <link id="theme-style" rel="stylesheet" href="assets/css/portal.css"> -->
     <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/portal.css') }}">
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-</head> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
+    <style>
+        .faq-section-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #888;
+            padding: 18px 20px 6px;
+        }
+        .accordion-button.btn-link {
+            font-weight: 600;
+            color: #222;
+            font-size: 0.95rem;
+        }
+        .accordion-button.btn-link:not(.collapsed) {
+            color: #00b764;
+        }
+        .accordion-body { font-size: 0.92rem; color: #444; line-height: 1.7; }
+        .accordion-body code {
+            background: #f0f7f4;
+            border-radius: 4px;
+            padding: 1px 5px;
+            color: #00875a;
+            font-size: 0.88rem;
+        }
+        .info-hero {
+            background: linear-gradient(135deg, #f0faf5, #e6f4ed);
+            border-radius: 16px;
+            padding: 36px 40px;
+            margin-bottom: 28px;
+        }
+        .info-hero h1 { font-weight: 800; color: #0f2a1c; }
+        .info-hero p  { color: #555; margin: 0; }
+    </style>
+</head>
 
-<body class="app">   	
-    <header class="app-header fixed-top">	   	            
-        <div class="app-header-inner">  
+<body class="app">
+    <header class="app-header fixed-top">
+        <div class="app-header-inner">
 	        <div class="container-fluid py-2">
-		        <div class="app-header-content"> 
+		        <div class="app-header-content">
 				    <div class="col-auto">
 					    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
 						    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img"><title>Menu</title><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg>
 					    </a>
 				    </div>
-		        </div><!--//row-->
-	            </div><!--//app-header-content-->
-	        </div><!--//container-fluid-->
-        </div><!--//app-header-inner-->
-        <div id="app-sidepanel" class="app-sidepanel"> 
+		        </div>
+	            </div>
+	        </div>
+        </div>
+        <div id="app-sidepanel" class="app-sidepanel">
 	        <div id="sidepanel-drop" class="sidepanel-drop"></div>
 	        <div class="sidepanel-inner d-flex flex-column">
 		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
 		        <div class="app-branding">
-		            <a class="app-logo loading" href="/portfolio"><span class="logo-text">Sharefolio</span></a>
-		        </div><!--//app-branding-->  
-		        
+		            <a class="app-logo loading" href="{{ url_for('portfolio') }}"><span class="logo-text">Sharefolio</span></a>
+		        </div>
 			    <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
 				    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
 					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
 					        <a class="nav-link loading" href="{{ url_for('portfolio') }}">
 						        <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span>
 		                        <span class="nav-link-text">Portfolio</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
-					    
+					        </a>
+					    </li>
 					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
 					        <a class="nav-link loading" href="{{ url_for('holdings') }}">
-								<span class="nav-icon" href><i class="fa-solid fa-hand-holding-dollar"></i></span>
+								<span class="nav-icon"><i class="fa-solid fa-hand-holding-dollar"></i></span>
 		                         <span class="nav-link-text">Holdings</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
+					        </a>
+					    </li>
 						<li class="nav-item has-submenu">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
 					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
 						        <span class="nav-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
 		                         <span class="nav-link-text">Transactions</span>
 		                         <span class="submenu-arrow">
-		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-	</svg>
-	                             </span><!--//submenu-arrow-->
-					        </a><!--//nav-link-->
+		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+		                         </span>
+					        </a>
 					        <div id="submenu-1" class="show submenu submenu-1" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
 							        <li class="submenu-item"><a class="submenu-link loading" href="{{ url_for('trades') }}">Trades</a></li>
 							        <li class="submenu-item"><a class="submenu-link loading" href="{{ url_for('incomes') }}">Incomes</a></li>
 						        </ul>
 					        </div>
-					    </li><!--//nav-item-->
-						
-						
-				    </ul><!--//app-menu-->
-			    </nav><!--//app-nav-->
-			    
-				<div class="app-sidepanel-footer">
+					    </li>
+				    </ul>
+			    </nav>
+			    <div class="app-sidepanel-footer">
 				    <nav class="app-nav app-nav-footer">
 					    <ul class="app-menu footer-menu list-unstyled">
 						    <li class="nav-item">
-						        <a class="nav-link active" href="/info">
-							        <span class="nav-icon">
-										<i class="fa fa-info"></i>
-									</span>
-			                        <span class="nav-link-text">Information</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
+						        <a class="nav-link active" href="{{ url_for('info') }}">
+							        <span class="nav-icon"><i class="fa fa-info"></i></span>
+			                        <span class="nav-link-text">Help &amp; FAQ</span>
+						        </a>
+						    </li>
 						    <li class="nav-item">
-						        <a class="nav-link" href="/settings">
-							        <span class="nav-icon">
-										<i class="fa fa-cogs"></i>
-									</span>
-			                        <span class="nav-link-text">Settings</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-						    <li class="nav-item">
-						        <a class="nav-link" href="{{ url_for('logout') }}">
-							        <span class="nav-icon">
-										<i class="fa fa-sign-out"></i>
-									</span>
-			                        <span class="nav-link-text">Log out</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-					    </ul><!--//footer-menu-->
+						        <a class="nav-link" href="{{ url_for('index') }}">
+							        <span class="nav-icon"><i class="fa fa-home"></i></span>
+			                        <span class="nav-link-text">Home</span>
+						        </a>
+						    </li>
+					    </ul>
 				    </nav>
-			    </div><!--//app-sidepanel-footer-->
-		       
-	        </div><!--//sidepanel-inner-->
-	    </div><!--//app-sidepanel-->
-    </header><!--//app-header-->
-    
+			    </div>
+	        </div>
+	    </div>
+    </header>
+
     <div class="app-wrapper">
 		<div class="app-content pt-3 p-md-3 p-lg-4">
-			<h1 class="app-page-title">Information</h1>
 			<div class="container-xl">
-				<div class="app-card app-card-accordion shadow-sm mb-4">
-					<!-- <div class="app-card-header p-4 pb-2  border-0">
-						<h4 class="app-card-title">Investments</h4>
-					</div> -->
-					<div class="app-card-body p-4 pt-0">
-						<div id="faq1-accordion" class="faq1-accordion faq-accordion accordion">
-							
-							<div class="accordion-item">
-								<h2 class="accordion-header" id="faq1-heading-1">
-									<button class="accordion-button btn btn-link" type="button" data-bs-toggle="collapse"  data-bs-target="#faq1-1" aria-expanded="false" aria-controls="faq1-1">
-									Supported exchanges, currency and assets.
-									</button>
-								</h2>
-								<div id="faq1-1" class="accordion-collapse collapse border-0" aria-labelledby="faq1-heading-1">
-									<div class="accordion-body text-start p4">
-										Sharefolio supports listed securities traded on the NYSE and NASDAQ in the US, the ASX in Australia, the TSX in Canada, the TWSE in Taiwan and the OTC Market in Taiwan. 
-										The supported currencies include USD, AUD, CAD and TWD. 
-										If you wish to record an unlisted asset, you have an option to select 'OTHER' as the exchange, as long as it is traded in one of the supported currencies. 
-									</div>
-								</div>
-							</div><!--//accordion-item-->
-							<div class="accordion-item">
-								<h2 class="accordion-header" id="faq1-heading-1">
-									<button class="accordion-button btn btn-link" type="button" data-bs-toggle="collapse"  data-bs-target="#faq1-1" aria-expanded="false" aria-controls="faq1-1">
-									What if the historical prices are not available for some assets?
-									</button>
-								</h2>
-								<div id="faq1-1" class="accordion-collapse collapse border-0" aria-labelledby="faq1-heading-1">
-									<div class="accordion-body text-start p4">
-										If price or FX data is unavailable, the asset's market value will default to your original purchase cost until updated data becomes available.
-										All other returns generated from incomes such as dividends, distributions and interests are calculated as usual. 
-									</div>
-								</div>
-							</div><!--//accordion-item-->
-							<div class="accordion-item">
-								<h2 class="accordion-header" id="faq1-heading-1">
-									<button class="accordion-button btn btn-link" type="button" data-bs-toggle="collapse"  data-bs-target="#faq1-1" aria-expanded="false" aria-controls="faq1-1">
-									When should I record a trade or an income?
-									</button>
-								</h2>
-								<div id="faq1-1" class="accordion-collapse collapse border-0" aria-labelledby="faq1-heading-1">
-									<div class="accordion-body text-start p4">
-										If a transaction has an impact on the quantity of your holdings as a result of buying, selling or adjustments (stock split, consolidation, etc.), it is generally considered a trade. 
-										On the other hand, if a transaction involves cash settlements only (dividends, distributions or interests), it is generally considered an income. 
-									</div>
-								</div>
-							</div><!--//accordion-item-->
-							<div class="accordion-item">
-								<h2 class="accordion-header" id="faq1-heading-1">
-									<button class="accordion-button btn btn-link" type="button" data-bs-toggle="collapse"  data-bs-target="#faq1-1" aria-expanded="false" aria-controls="faq1-1">
-									How do I record a dividend/distribution reinvestment transaction?
-									</button>
-								</h2>
-								<div id="faq1-1" class="accordion-collapse collapse border-0" aria-labelledby="faq1-heading-1">
-									<div class="accordion-body text-start p4">
-										A dividend/distribution reinvestment transaction has two components: an income and a trade. In this transaction, you receive an income from your investment and use that amount to acquire more investments.
-										On Sharefolio, when you add an income, you can elect to enter a dividend/distribution reinvestment trade on the same page. Alternatively, you can record the income and the reinvestment trade separately on the Incomes and Trades Pages. 
-									</div>
-								</div>
-							</div><!--//accordion-item-->
 
-												
-						</div><!--//faq1-accordion-->
-					</div><!--//app-card-body-->
-				</div><!--//app-card-->
+                <div class="info-hero">
+                    <h1 class="app-page-title mb-1">Help &amp; FAQ</h1>
+                    <p>Everything you need to know about recording and interpreting your portfolio data.</p>
+                </div>
+
+				<div class="app-card app-card-accordion shadow-sm mb-4">
+					<div class="app-card-body p-4 pt-0">
+						<div id="faq-accordion" class="faq-accordion accordion">
+
+                            <!-- ── Getting started ──────────────────────────── -->
+                            <div class="faq-section-title">Getting started</div>
+
+							<div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-1">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-1">
+                                        What exchanges and currencies does Sharefolio support?
+									</button>
+								</h2>
+								<div id="faq-1" class="accordion-collapse collapse" aria-labelledby="faq-h-1">
+									<div class="accordion-body">
+                                        <strong>Exchanges:</strong> NYSE &amp; NASDAQ (US), ASX (Australia), TSX (Canada), TWSE and OTC Market (Taiwan).<br><br>
+                                        <strong>Currencies:</strong> AUD, USD, CAD, TWD.<br><br>
+                                        For unlisted assets (private equity, ETFs not on a supported exchange), select <em>Other</em> as the exchange and enter prices manually. All amounts must still be in one of the four supported currencies so FX conversion can be applied.
+									</div>
+								</div>
+							</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-2">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-2">
+                                        What is the base currency, and can I change it?
+									</button>
+								</h2>
+								<div id="faq-2" class="accordion-collapse collapse" aria-labelledby="faq-h-2">
+									<div class="accordion-body">
+                                        The base currency is the currency used to consolidate all your holdings into a single view.
+                                        Currently set to <code>AUD</code> in <code>configs.py</code>.
+                                        To change it, open <code>app.py</code> and update the <code>BASE_CURRENCY</code> constant at the top of the file, then restart the app.
+                                        Historical FX rates are fetched automatically for AUD, USD, CAD and TWD.
+									</div>
+								</div>
+							</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-3">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-3">
+                                        How do I import existing trade history?
+									</button>
+								</h2>
+								<div id="faq-3" class="accordion-collapse collapse" aria-labelledby="faq-h-3">
+									<div class="accordion-body">
+                                        On the <strong>Trades</strong> or <strong>Incomes</strong> page, click <em>Upload CSV</em>.
+                                        Your file must match the expected column order:<br><br>
+                                        Trades: <code>date, ticker, exchange, currency, fx, type, quantity, price, fees, note</code><br>
+                                        Incomes: <code>date, ticker, exchange, currency, fx, amount, tax_credit, fees, note</code><br><br>
+                                        You can also download a template by clicking <em>Download CSV</em> from an existing page.
+                                        Uploading a CSV replaces the entire file, so make sure it is complete.
+									</div>
+								</div>
+							</div>
+
+                            <!-- ── Recording transactions ──────────────────── -->
+                            <div class="faq-section-title">Recording transactions</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-4">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-4">
+                                        When should I record a Trade vs an Income?
+									</button>
+								</h2>
+								<div id="faq-4" class="accordion-collapse collapse" aria-labelledby="faq-h-4">
+									<div class="accordion-body">
+                                        <strong>Trades</strong> — any event that changes your quantity held:
+                                        <ul>
+                                            <li>Buying or selling shares (<code>BUY</code> / <code>SELL</code>)</li>
+                                            <li>Stock splits, consolidations, or corporate restructure adjustments (<code>ADJUSTMENT</code>)</li>
+                                        </ul>
+                                        <strong>Incomes</strong> — cash settlements that do not change your quantity:
+                                        <ul>
+                                            <li>Cash dividends and distributions</li>
+                                            <li>Interest income</li>
+                                            <li>Capital return payments</li>
+                                        </ul>
+									</div>
+								</div>
+							</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-5">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-5">
+                                        What does the <em>ADJUSTMENT</em> trade type mean?
+									</button>
+								</h2>
+								<div id="faq-5" class="accordion-collapse collapse" aria-labelledby="faq-h-5">
+									<div class="accordion-body">
+                                        Use <code>ADJUSTMENT</code> for corporate actions that change your share count without a purchase or sale:
+                                        <ul>
+                                            <li><strong>Stock split</strong>: enter a positive quantity equal to the additional shares received, price = 0, fees = 0</li>
+                                            <li><strong>Consolidation</strong>: enter a negative quantity equal to the shares removed, price = 0, fees = 0</li>
+                                        </ul>
+                                        Adjustments do not affect your cost basis or realised P&amp;L — they only update your holding quantity.
+									</div>
+								</div>
+							</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-6">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-6">
+                                        How do I record a dividend reinvestment plan (DRP)?
+									</button>
+								</h2>
+								<div id="faq-6" class="accordion-collapse collapse" aria-labelledby="faq-h-6">
+									<div class="accordion-body">
+                                        A DRP has two components: an <strong>income event</strong> (dividend received) and a <strong>trade event</strong> (shares acquired with that dividend).<br><br>
+                                        On the <strong>Add Income</strong> page, tick <em>Add Dividend/Distribution Reinvestment Trade?</em> and fill in the reinvestment date, quantity received, and per-share price.
+                                        Sharefolio will save both records simultaneously.<br><br>
+                                        Alternatively, record them separately: add the income on the Incomes page and the BUY trade on the Trades page.
+									</div>
+								</div>
+							</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-7">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-7">
+                                        What is the <em>FX</em> field, and when do I need to fill it in?
+									</button>
+								</h2>
+								<div id="faq-7" class="accordion-collapse collapse" aria-labelledby="faq-h-7">
+									<div class="accordion-body">
+                                        The <em>FX</em> field is the exchange rate at the time of the transaction, expressed as <strong>Base Currency ÷ Asset Currency</strong>.<br><br>
+                                        For example, if your base currency is AUD and you bought a USD stock when 1 AUD = 0.64 USD, the FX value would be <code>0.64</code>.<br><br>
+                                        This field is <strong>optional</strong>. Sharefolio automatically fetches historical FX rates from Yahoo Finance for the transaction date. You only need to supply a manual rate if you want to override the automatically fetched rate (e.g. the rate your broker actually applied).
+									</div>
+								</div>
+							</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-8">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-8">
+                                        What is <em>Tax Credit</em> (or Tax Credit)?
+									</button>
+								</h2>
+								<div id="faq-8" class="accordion-collapse collapse" aria-labelledby="faq-h-8">
+									<div class="accordion-body">
+                                        Australian companies can attach <strong>franking credits</strong> (imputation credits) to dividends, representing company tax already paid.
+                                        Enter the credit amount in the <em>Tax Credit</em> field when recording an income.<br><br>
+                                        Sharefolio tracks these separately and includes them in your total income and total return calculations, so your portfolio returns reflect the full economic benefit.
+									</div>
+								</div>
+							</div>
+
+                            <!-- ── Understanding metrics ───────────────────── -->
+                            <div class="faq-section-title">Understanding your numbers</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-9">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-9">
+                                        How is <em>Capital Commitment</em> calculated?
+									</button>
+								</h2>
+								<div id="faq-9" class="accordion-collapse collapse" aria-labelledby="faq-h-9">
+									<div class="accordion-body">
+                                        <em>Commitment</em> (shown as <em>Total Contribution</em> in some places) is the cumulative net cash you have invested — not just your current cost basis.<br><br>
+                                        It tracks every time your cash balance would have gone negative (i.e. you spent money from outside the portfolio).
+                                        Returns from dividends that are reinvested reduce the commitment, because that cash came from the portfolio itself, not from your pocket.<br><br>
+                                        Return percentages are calculated against commitment, making them a true <em>return on capital deployed</em> metric.
+									</div>
+								</div>
+							</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-10">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-10">
+                                        What is the difference between <em>Base Currency</em> and <em>Asset Currency</em> views?
+									</button>
+								</h2>
+								<div id="faq-10" class="accordion-collapse collapse" aria-labelledby="faq-h-10">
+									<div class="accordion-body">
+                                        <strong>Base Currency view</strong> — all assets are converted to your base currency (e.g. AUD) using historical exchange rates. This gives you a consolidated, single-currency view of your entire portfolio, including FX gain/loss.<br><br>
+                                        <strong>Asset Currency view</strong> — each asset group is shown in its traded currency (e.g. US holdings in USD). Returns in this view reflect pure price performance without FX effects, so you can separate how much came from the asset vs the currency move.
+									</div>
+								</div>
+							</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-11">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-11">
+                                        What happens when price or FX data is unavailable?
+									</button>
+								</h2>
+								<div id="faq-11" class="accordion-collapse collapse" aria-labelledby="faq-h-11">
+									<div class="accordion-body">
+                                        Sharefolio fetches data from Yahoo Finance. If price data is unavailable for a given date (e.g. a new listing, weekend, public holiday, or delisted security), the last known price is carried forward.<br><br>
+                                        If no price is ever available (e.g. unlisted asset), market value will show as 0 and unrealised P&amp;L will not be calculated. Income and realised gains are still tracked correctly.
+									</div>
+								</div>
+							</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-12">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-12">
+                                        How is FIFO cost basis calculated on partial sells?
+									</button>
+								</h2>
+								<div id="faq-12" class="accordion-collapse collapse" aria-labelledby="faq-h-12">
+									<div class="accordion-body">
+                                        Sharefolio uses strict <strong>First In, First Out (FIFO)</strong> lot matching.<br><br>
+                                        Each BUY creates a new lot with its adjusted cost price (including brokerage). When you SELL, the oldest lots are closed first. Realised P&amp;L is recognised as each lot closes.<br><br>
+                                        The remaining open lots continue to accumulate unrealised P&amp;L against the current market price.
+									</div>
+								</div>
+							</div>
+
+                            <!-- ── Troubleshooting ──────────────────────────── -->
+                            <div class="faq-section-title">Troubleshooting</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-13">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-13">
+                                        The app is slow to load — is that normal?
+									</button>
+								</h2>
+								<div id="faq-13" class="accordion-collapse collapse" aria-labelledby="faq-h-13">
+									<div class="accordion-body">
+                                        Yes, on first load (or after any trade/income change) Sharefolio fetches historical price and FX data from Yahoo Finance, which takes several seconds proportional to the number of tickers and the length of your history.<br><br>
+                                        Asset names are cached in <code>data/asset_names.json</code> to avoid repeated lookups.
+                                        Subsequent page navigations within the same session are fast because data is held in memory.
+									</div>
+								</div>
+							</div>
+
+                            <div class="accordion-item">
+								<h2 class="accordion-header" id="faq-h-14">
+									<button class="accordion-button btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-14">
+                                        A ticker I entered shows no price data. What should I check?
+									</button>
+								</h2>
+								<div id="faq-14" class="accordion-collapse collapse" aria-labelledby="faq-h-14">
+									<div class="accordion-body">
+                                        Sharefolio constructs the Yahoo Finance ticker as <code>TICKER.EXCHANGE</code> (e.g. <code>BHP.AX</code>, <code>ENB.TO</code>).
+                                        US tickers are passed without a suffix (e.g. <code>AAPL</code> not <code>AAPL.US</code>).<br><br>
+                                        If no data is returned:
+                                        <ul>
+                                            <li>Double-check the ticker symbol matches the Yahoo Finance symbol exactly (case-insensitive but spelling matters)</li>
+                                            <li>For Taiwan stocks, use <code>TW</code> (TWSE) or <code>TWO</code> (OTC) as the exchange</li>
+                                            <li>Verify the security was listed before your first recorded trade date</li>
+                                        </ul>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-	    
+
 	    <footer class="app-footer">
 		    <div class="container text-center py-3">
-		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small>
-		       
+            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
 		    </div>
-	    </footer><!--//app-footer-->
-	    
-    </div><!--//app-wrapper-->    					
+	    </footer>
 
+    </div>
 
-	<!-- JavaScript -->
 	<script src="{{ url_for('static', filename='assets/plugins/popper.min.js') }}"></script>
 	<script src="{{ url_for('static', filename='assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
-
-	<!-- Charts JS -->
-	<script src="{{ url_for('static', filename='assets/plugins/chart.js/chart.min.js') }}"></script>
-	<script src="{{ url_for('static', filename='assets/js/index-charts.js') }}"></script>
-
-	<!-- Page-Specific JS -->
 	<script src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
 
 </body>
-</html> 
-
+</html>

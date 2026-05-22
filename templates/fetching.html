@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sharefolio — Loading prices…</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer src="{{ url_for('static', filename='assets/plugins/fontawesome/js/all.min.js') }}"></script>
+    <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/portal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .fetching-wrap {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            text-align: center;
+            padding: 2rem;
+            background: var(--bs-body-bg, #fff);
+            z-index: 9999;
+        }
+        .fetch-spinner {
+            width: 56px;
+            height: 56px;
+            border: 5px solid #e0e0e0;
+            border-top: 5px solid #00b764;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            flex-shrink: 0;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .fetch-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .fetch-sub {
+            color: #888;
+            margin: 0;
+            max-width: 380px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .fetch-status {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin: 0;
+        }
+        .fetch-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        @keyframes dots {
+            0%   { content: ''; }
+            25%  { content: '.'; }
+            50%  { content: '..'; }
+            75%  { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <div class="fetching-wrap">
+        <div class="fetch-spinner"></div>
+        <p class="fetch-title">Fetching latest prices<span class="fetch-dots"></span></p>
+        <p class="fetch-sub">Downloading historical price data from Yahoo Finance. This only happens on first launch — subsequent loads read from the local cache.</p>
+        <p class="fetch-status" id="fetch-status">&nbsp;</p>
+    </div>
+
+    <script>
+    (function () {
+        var next = {{ next_url | tojson }};
+        var statusEl = document.getElementById('fetch-status');
+
+        function poll() {
+            fetch('/api/cache-status')
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data.ready) {
+                        statusEl.textContent = 'Done! Redirecting…';
+                        window.location.href = next;
+                        return;
+                    }
+                    statusEl.textContent = data.fetching
+                        ? 'Downloading from Yahoo Finance…'
+                        : 'Waiting for download to start…';
+                    setTimeout(poll, 1500);
+                })
+                .catch(function () {
+                    statusEl.textContent = 'Waiting for server…';
+                    setTimeout(poll, 2000);
+                });
+        }
+
+        // Kick off one fetch on page load (background loop may not have run yet)
+        fetch('/api/trigger-fetch', { method: 'POST' }).catch(function () {});
+        poll();
+    })();
+    </script>
+</body>
+</html>

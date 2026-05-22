@@ -8,11 +8,19 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from threading import Lock
 from configs import SUPPORTED_FX_PAIRS
+from paths import APP_DATA_DIR
 from portfolio_group import PortfolioGroup
 
 
 class Portfolio:
-    def __init__(self, trades: pd.DataFrame, dividends: pd.DataFrame, base_currency: str):
+    def __init__(
+        self,
+        trades: pd.DataFrame,
+        dividends: pd.DataFrame,
+        base_currency: str,
+        historical_prices: pd.DataFrame | None = None,
+        historical_fx: pd.DataFrame | None = None,
+    ):
         self.trades: pd.DataFrame = trades
         self.dividends: pd.DataFrame = dividends
         self.assets_base_currency: dict[str, Asset] = {}
@@ -27,14 +35,18 @@ class Portfolio:
         self.dividends_base: pd.DataFrame = pd.DataFrame()
 
         self.asset_names: dict[str: str] = dict()
-        self.asset_names_file: Path = Path("data") / "asset_names.json"
+        self.asset_names_file: Path = APP_DATA_DIR / "asset_names.json"
         self.asset_names_lock = Lock()
         self.total_group_base_currency: PortfolioGroup = None
         self.group_by_exchanges: dict[str, PortfolioGroup] = {}
 
         self.load_asset_names_cache()
 
-        self.fetch_historical_price_data()
+        if historical_prices is not None and historical_fx is not None:
+            self.historical_prices = historical_prices
+            self.historical_fx = historical_fx
+        else:
+            self.fetch_historical_price_data()
         self.convert_trades_dividends_to_base_currency()
         self.load_assets_base_currency()
         self.load_assets_original_currency()
@@ -100,11 +112,44 @@ class Portfolio:
         self.historical_fx = historical_fx
 
 
+    def _fill_fx_from_historical(self, df: pd.DataFrame) -> None:
+        """Fill NaN fx values in-place using merged historical FX columns.
+        fx convention: how many asset-currency units per 1 base-currency unit (e.g. AUDUSD for USD assets)."""
+        for currency in df["currency"].unique():
+            mask = df["currency"] == currency
+            null_fx = mask & df["fx"].isna()
+            if not null_fx.any():
+                continue
+            if currency == self.base_currency:
+                df.loc[null_fx, "fx"] = 1.0
+            else:
+                fx_pair = f"{self.base_currency}{currency}=X"
+                if fx_pair in df.columns:
+                    df.loc[null_fx, "fx"] = df.loc[null_fx, fx_pair]
+
     def convert_trades_dividends_to_base_currency(self) -> float:
         # match the historical_fx to the trades and dividends based on date
         trades_base: pd.DataFrame = self.trades.merge(self.historical_fx, left_index=True, right_index=True, how='left')
         dividends_base: pd.DataFrame = self.dividends.merge(self.historical_fx, left_index=True, right_index=True, how='left')
-        
+
+        # fill NaN fx with historical rates; also propagate back to raw DataFrames
+        self._fill_fx_from_historical(trades_base)
+        self._fill_fx_from_historical(dividends_base)
+        self.trades["fx"] = trades_base["fx"].values
+        if not self.dividends.empty:
+            self.dividends["fx"] = dividends_base["fx"].values
+
+        def _resolve_fx(row: pd.Series, currency: str) -> float:
+            """Return FX rate (asset-currency per base-currency, e.g. AUDUSD for USD assets).
+            Use row['fx'] if provided, else fall back to historical data."""
+            provided = row.get("fx")
+            if provided is not None and pd.notna(provided) and float(provided) > 0:
+                return float(provided)
+            fx_pair = f"{self.base_currency}{currency}=X"
+            if fx_pair in self.historical_fx.columns:
+                return float(row[fx_pair])
+            raise ValueError(f"No FX rate for {fx_pair} on {row.name}: neither 'fx' column nor historical data available")
+
         prices_in_base_currency = []
         fees_in_base_currency = []
         for _, row in trades_base.iterrows():
@@ -112,16 +157,12 @@ class Portfolio:
                 prices_in_base_currency.append(row["price"])
                 fees_in_base_currency.append(row["fees"])
             else:
-                fx_pair = f"{row['currency']}{self.base_currency}=X"
-                if fx_pair in self.historical_fx.columns:
-                    fx_rate = row[fx_pair]
-                    prices_in_base_currency.append(row["price"] * fx_rate)
-                    fees_in_base_currency.append(row["fees"] * fx_rate)
-                else:
-                    raise ValueError(f"FX pair {fx_pair} not found in historical FX data")
+                fx_rate = _resolve_fx(row, row["currency"])
+                prices_in_base_currency.append(row["price"] / fx_rate)
+                fees_in_base_currency.append(row["fees"] / fx_rate)
         trades_base["price"] = prices_in_base_currency
         trades_base["fees"] = fees_in_base_currency
-        
+
         amounts_in_base_currency = []
         tax_credit_in_base_currency = []
         for _, row in dividends_base.iterrows():
@@ -129,13 +170,9 @@ class Portfolio:
                 amounts_in_base_currency.append(row["amount"])
                 tax_credit_in_base_currency.append(row["tax_credit"])
             else:
-                fx_pair = f"{row['currency']}{self.base_currency}=X"
-                if fx_pair in self.historical_fx.columns:
-                    fx_rate = row[fx_pair]
-                    amounts_in_base_currency.append(row["amount"] * fx_rate)
-                    tax_credit_in_base_currency.append(row["tax_credit"] * fx_rate)
-                else:
-                    raise ValueError(f"FX pair {fx_pair} not found in historical FX data")
+                fx_rate = _resolve_fx(row, row["currency"])
+                amounts_in_base_currency.append(row["amount"] / fx_rate)
+                tax_credit_in_base_currency.append(row["tax_credit"] / fx_rate)
         dividends_base["amount"] = amounts_in_base_currency
         dividends_base["tax_credit"] = tax_credit_in_base_currency
         self.trades_base = trades_base
@@ -197,14 +234,19 @@ class Portfolio:
 
             asset_historical_prices = self.historical_prices[yf_symbol]
             if currency != self.base_currency:
-                # TODO: convert asset_historical_prices to base currency
-                filtered_fx_df = asset_historical_prices.to_frame(name="close").merge(self.historical_fx, 
-                                                                                    left_index=True, 
-                                                                                    right_index=True, 
-                                                                                    how='left')
-                
-                asset_historical_prices = filtered_fx_df["close"] * filtered_fx_df[f"{currency}{self.base_currency}=X"]
-                asset_historical_prices = pd.Series(asset_historical_prices, index=filtered_fx_df.index)
+                fx_pair = f"{self.base_currency}{currency}=X"
+                filtered_fx_df = asset_historical_prices.to_frame(name="close").merge(
+                    self.historical_fx[[fx_pair]],
+                    left_index=True,
+                    right_index=True,
+                    how='left',
+                )
+                # forward-fill any NaN FX rates (e.g. weekends / early dates with no data)
+                filtered_fx_df[fx_pair] = filtered_fx_df[fx_pair].ffill().bfill()
+                asset_historical_prices = pd.Series(
+                    filtered_fx_df["close"] / filtered_fx_df[fx_pair],
+                    index=filtered_fx_df.index,
+                )
             
             with self.asset_names_lock:
                 cached_name = self.asset_names.get(yf_symbol)
@@ -247,9 +289,9 @@ class Portfolio:
         for exchange in all_exchanges:
             exchange_trades = self.trades[self.trades["exchange"] == exchange]
             exchange_dividends = self.dividends[self.dividends["exchange"] == exchange]
-            exchange_assets = {ticker: asset 
-                               for ticker, asset 
-                               in self.assets_base_currency.items() 
+            exchange_assets = {ticker: asset
+                               for ticker, asset
+                               in self.assets_original_currency.items()
                                if asset.exchange == exchange}
             self.group_by_exchanges[exchange] = PortfolioGroup(group_name=exchange, 
                                                                trades=exchange_trades, 

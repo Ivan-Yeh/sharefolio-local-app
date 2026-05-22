@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sharefolio - No Transactions</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer src="{{ url_for('static', filename='assets/plugins/fontawesome/js/all.min.js') }}"></script>
+    <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/portal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
+</head>
+
+<body class="app">
+    <header class="app-header fixed-top">
+        <div class="app-header-inner">
+	        <div class="container-fluid py-2">
+		        <div class="app-header-content">
+				    <div class="col-auto">
+					    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
+						    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img"><title>Menu</title><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+					    </a>
+				    </div>
+		        </div>
+	        </div>
+        </div>
+        <div id="app-sidepanel" class="app-sidepanel">
+	        <div id="sidepanel-drop" class="sidepanel-drop"></div>
+	        <div class="sidepanel-inner d-flex flex-column">
+		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
+		        <div class="app-branding">
+		            <a class="app-logo" href="/portfolio"><span class="logo-text">Sharefolio</span></a>
+		        </div>
+			    <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
+				    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
+					    <li class="nav-item">
+					        <a class="nav-link" href="{{ url_for('portfolio') }}">
+						        <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span>
+		                        <span class="nav-link-text">Portfolio</span>
+					        </a>
+					    </li>
+					    <li class="nav-item">
+					        <a class="nav-link" href="{{ url_for('holdings') }}">
+								<span class="nav-icon"><i class="fa-solid fa-hand-holding-dollar"></i></span>
+		                         <span class="nav-link-text">Holdings</span>
+					        </a>
+					    </li>
+						<li class="nav-item has-submenu">
+					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="true" aria-controls="submenu-1">
+						        <span class="nav-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
+		                         <span class="nav-link-text">Transactions</span>
+		                         <span class="submenu-arrow">
+		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+		                               <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+		                             </svg>
+		                         </span>
+					        </a>
+					        <div id="submenu-1" class="show submenu submenu-1" data-bs-parent="#menu-accordion">
+						        <ul class="submenu-list list-unstyled">
+							        <li class="submenu-item"><a class="submenu-link" href="{{ url_for('trades') }}">Trades</a></li>
+							        <li class="submenu-item"><a class="submenu-link" href="{{ url_for('incomes') }}">Incomes</a></li>
+						        </ul>
+					        </div>
+					    </li>
+				    </ul>
+			    </nav>
+			    <div class="app-sidepanel-footer">
+				    <nav class="app-nav app-nav-footer">
+					    <ul class="app-menu footer-menu list-unstyled">
+						    <li class="nav-item">
+						        <a class="nav-link" href="{{ url_for('info') }}">
+							        <span class="nav-icon"><i class="fa fa-info"></i></span>
+			                        <span class="nav-link-text">Help &amp; FAQ</span>
+						        </a>
+						    </li>
+						    <li class="nav-item">
+						        <a class="nav-link" href="{{ url_for('settings') }}">
+							        <span class="nav-icon"><i class="fa fa-cogs"></i></span>
+			                        <span class="nav-link-text">Settings</span>
+						        </a>
+						    </li>
+						    <li class="nav-item">
+						        <a class="nav-link" href="{{ url_for('index') }}">
+							        <span class="nav-icon"><i class="fa fa-home"></i></span>
+			                        <span class="nav-link-text">Home</span>
+						        </a>
+						    </li>
+					    </ul>
+				    </nav>
+			    </div>
+	        </div>
+	    </div>
+    </header>
+
+    <div class="app-wrapper">
+		<div class="container-xl">
+			<div class="text-center" style="padding: 80px 0 60px;">
+				<div style="font-size:4rem;margin-bottom:24px;opacity:0.25;">
+					<i class="fa-solid fa-chart-column"></i>
+				</div>
+				<h2 class="mb-3">No transactions found</h2>
+				<p class="text-muted mb-5" style="max-width:460px;margin:0 auto 2rem;">
+					Your portfolio is empty. Add trades to get started — enter them manually
+					or upload a CSV file.
+				</p>
+				<div class="d-flex justify-content-center gap-3 flex-wrap">
+					<a href="{{ url_for('add_trade') }}" class="btn app-btn-primary">
+						<i class="fa-solid fa-plus me-1"></i> Add Trade
+					</a>
+					<a href="{{ url_for('trades') }}" class="btn app-btn-secondary">
+						<i class="fa-solid fa-upload me-1"></i> Upload Trades CSV
+					</a>
+				</div>
+				<p class="text-muted mt-5 small">
+					Need help? See the <a href="{{ url_for('info') }}">FAQ &amp; Help</a> page for the
+					required CSV format and column definitions.
+				</p>
+			</div>
+		</div>
+
+	    <footer class="app-footer">
+		    <div class="container text-center py-3">
+                <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
+		    </div>
+	    </footer>
+    </div>
+
+	<script src="{{ url_for('static', filename='assets/plugins/popper.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+	{% include "loading.html" %}
+</body>
+</html>

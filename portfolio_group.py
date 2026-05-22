@@ -70,8 +70,18 @@ class PortfolioGroup:
         group_performance_df["commitment"] = group_performance_df.apply(lambda row: self.compute_total_commitment_on_date(row.name), axis=1)
 
         group_performance_df.drop(columns=["close", "holdings"], inplace=True)
+
+        # Recompute portfolio-level TWR from summed cash flow components
+        # (summing asset TWR values is not valid; must chain from portfolio-level HPRs)
+        prev_mv = group_performance_df["market_value"].shift(1).fillna(0.0)
+        denom = prev_mv + group_performance_df["buy_cost"]
+        numer = group_performance_df["market_value"] + group_performance_df["eod_returns"]
+        hpr = (numer / denom.where(denom > 0)).fillna(1.0) - 1.0
+        group_performance_df["twr"] = (1.0 + hpr).cumprod() - 1.0
+        group_performance_df.drop(columns=["buy_cost", "eod_returns"], inplace=True)
+
         group_performance_df.fillna(0.0, inplace=True)
-        
+
         return group_performance_df
 
     def _safe_pct(self, numerator: pd.Series, denominator: pd.Series) -> pd.Series:
@@ -81,15 +91,29 @@ class PortfolioGroup:
     def _period_change(self, cumulative_series: pd.Series) -> pd.Series:
         return cumulative_series.sub(cumulative_series.shift(1)).fillna(cumulative_series)
 
+    def _opening_balance(self, performance_df: pd.DataFrame) -> pd.Series:
+        """Beginning-of-period market value as the denominator for period return %.
+        Falls back to cost_basis for the first period (no prior market value)."""
+        prev_mv = performance_df["market_value"].shift(1)
+        return prev_mv.where(prev_mv.notna() & (prev_mv != 0), performance_df["cost_basis"])
+
+    _PERIOD_ALIAS: dict[str, str] = {"ME": "M", "QE": "Q", "6ME": "6M", "YE": "Y"}
+
     def _periodic_snapshot(self, freq: str) -> pd.DataFrame:
         daily_df = self.daily_performance_df.sort_index().copy()
         if daily_df.empty:
             return daily_df
 
+        # Trim to first date with actual activity (first trade)
+        active = daily_df[daily_df['cost_basis'] != 0]
+        if not active.empty:
+            daily_df = daily_df[daily_df.index >= active.index[0]]
+
         periodic_df = daily_df.groupby(pd.Grouper(freq=freq)).tail(1).copy()
         periodic_df.sort_index(inplace=True)
 
-        period_labels = periodic_df.index.to_period(freq).astype(str).to_series(index=periodic_df.index)
+        period_freq = self._PERIOD_ALIAS.get(freq, freq)
+        period_labels = periodic_df.index.to_period(period_freq).astype(str).to_series(index=periodic_df.index)
         period_labels.iloc[-1] = "to date"
         periodic_df.insert(0, "period", period_labels)
         return periodic_df
@@ -111,6 +135,7 @@ class PortfolioGroup:
             "dividends",
             "tax_credit",
             "total_return",
+            "twr",
         ]
         performance_df = periodic_df[base_cols].copy()
 
@@ -131,11 +156,13 @@ class PortfolioGroup:
         performance_df["period_total_dividends"] = self._period_change(total_dividends)
         performance_df["period_total_return"] = self._period_change(performance_df["total_return"])
 
-        performance_df["period_realised_pnl_pct"] = self._safe_pct(performance_df["period_realised_pnl"], performance_df["commitment"])
-        performance_df["period_unrealised_pnl_pct"] = self._safe_pct(performance_df["period_unrealised_pnl"], performance_df["commitment"])
-        performance_df["period_total_pnl_pct"] = self._safe_pct(performance_df["period_total_pnl"], performance_df["commitment"])
-        performance_df["period_total_dividends_pct"] = self._safe_pct(performance_df["period_total_dividends"], performance_df["commitment"])
-        performance_df["period_total_return_pct"] = self._safe_pct(performance_df["period_total_return"], performance_df["commitment"])
+        opening = self._opening_balance(performance_df)
+        performance_df["period_realised_pnl_pct"] = self._safe_pct(performance_df["period_realised_pnl"], opening)
+        performance_df["period_unrealised_pnl_pct"] = self._safe_pct(performance_df["period_unrealised_pnl"], opening)
+        performance_df["period_total_pnl_pct"] = self._safe_pct(performance_df["period_total_pnl"], opening)
+        performance_df["period_total_dividends_pct"] = self._safe_pct(performance_df["period_total_dividends"], opening)
+        prev_twr = performance_df["twr"].shift(1).fillna(0.0)
+        performance_df["period_total_return_pct"] = (1.0 + performance_df["twr"]) / (1.0 + prev_twr) - 1.0
         return performance_df
 
     def open_position_performance(self, freq: str = "M") -> pd.DataFrame:
@@ -153,6 +180,7 @@ class PortfolioGroup:
             "dividends",
             "tax_credit",
             "total_return",
+            "twr",
         ]
         performance_df = periodic_df[base_cols].copy()
 
@@ -167,8 +195,9 @@ class PortfolioGroup:
         performance_df["period_total_dividends"] = self._period_change(total_dividends)
         performance_df["period_open_return"] = self._period_change(performance_df["open_return"])
 
-        performance_df["period_unrealised_pnl_pct"] = self._safe_pct(performance_df["period_unrealised_pnl"], performance_df["commitment"])
-        performance_df["period_total_dividends_pct"] = self._safe_pct(performance_df["period_total_dividends"], performance_df["commitment"])
-        performance_df["period_open_return_pct"] = self._safe_pct(performance_df["period_open_return"], performance_df["commitment"])
+        opening = self._opening_balance(performance_df)
+        performance_df["period_unrealised_pnl_pct"] = self._safe_pct(performance_df["period_unrealised_pnl"], opening)
+        performance_df["period_total_dividends_pct"] = self._safe_pct(performance_df["period_total_dividends"], opening)
+        performance_df["period_open_return_pct"] = self._safe_pct(performance_df["period_open_return"], opening)
         return performance_df
     

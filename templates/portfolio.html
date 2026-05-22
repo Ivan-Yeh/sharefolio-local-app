@@ -19,6 +19,7 @@
     <!-- App CSS -->  
     <!-- <link id="theme-style" rel="stylesheet" href="assets/css/portal.css"> -->
     <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/portal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head> 
@@ -93,7 +94,7 @@
 							        <span class="nav-icon">
 										<i class="fa fa-info"></i>
 									</span>
-			                        <span class="nav-link-text">Information</span>
+			                        <span class="nav-link-text">Help &amp; FAQ</span>
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 						    <li class="nav-item">
@@ -105,11 +106,11 @@
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 						    <li class="nav-item">
-						        <a class="nav-link" href="{{ url_for('logout') }}">
+						        <a class="nav-link" href="{{ url_for('index') }}">
 							        <span class="nav-icon">
-										<i class="fa fa-sign-out"></i>
+										<i class="fa fa-home"></i>
 									</span>
-			                        <span class="nav-link-text">Log out</span>
+			                        <span class="nav-link-text">Home</span>
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 					    </ul><!--//footer-menu-->
@@ -244,7 +245,7 @@
 										<div class="app-card-header p-3">
 											<div class="row justify-content-between align-items-center">
 												<div class="col-auto">
-													<h4 class="app-card-title">Portfolio Value Over Time</h4>
+													<h4 class="app-card-title">Time-Weighted Return Over Time</h4>
 												</div>
 											</div>
 										</div>
@@ -270,9 +271,9 @@
 													data: {
 														labels: {{ portfolioValueBase_dates | tojson }},
 														datasets: [{
-														label: "Portfolio Value",
+														label: "TWR",
 														data: {{ portfolioValueBase_values | tojson }},
-														borderColor: "green",
+														borderColor: "#00b764",
 														tension: 0.2,
 														pointRadius: 2
 														}]
@@ -281,7 +282,14 @@
 														responsive: true,
 														maintainAspectRatio: false,
 														plugins: {
-															legend: false
+															legend: false,
+															tooltip: {
+																callbacks: {
+																	label: function(context) {
+																		return 'TWR: ' + context.raw.toFixed(2) + '%';
+																	}
+																}
+															}
 														},
 														scales: {
 														x: {
@@ -299,7 +307,10 @@
 															}
 														},
 														y: {
-															beginAtZero: false
+															beginAtZero: false,
+															ticks: {
+																callback: function(value) { return value.toFixed(1) + '%'; }
+															}
 														},
 														}
 													}
@@ -401,13 +412,13 @@
 														{
 														label: 'Capital Gains',
 														data: dataByPeriodBase[initialPeriod].capital_gains,
-														backgroundColor: 'rgba(54, 162, 235, 0.8)',
+														backgroundColor: 'rgba(0, 183, 100, 0.75)',
 														stack: 'combined',
 														},
 														{
 														label: 'Income',
 														data: dataByPeriodBase[initialPeriod].income,
-														backgroundColor: 'rgba(255, 206, 86, 0.8)',
+														backgroundColor: 'rgba(99, 179, 237, 0.8)',
 														stack: 'combined',
 														},
 														{
@@ -571,7 +582,7 @@
 												<div class="app-card-header p-3">
 													<div class="row justify-content-between align-items-center">
 														<div class="col-auto">
-															<h4 class="app-card-title">Portfolio Value Over Time</h4>
+															<h4 class="app-card-title">Time-Weighted Return Over Time</h4>
 														</div>
 													</div>
 												</div>
@@ -597,9 +608,9 @@
 															data: {
 																labels: {{ portfolioValueAsset_dates[currency] | tojson }},
 																datasets: [{
-																label: "Portfolio Value",
+																label: "TWR",
 																data: {{ portfolioValueAsset_values[currency] | tojson }},
-																borderColor: "green",
+																borderColor: "#00b764",
 																tension: 0.2,
 																pointRadius: 2
 																}]
@@ -608,7 +619,14 @@
 																responsive: true,
 																maintainAspectRatio: false,
 																plugins: {
-																	legend: false
+																	legend: false,
+																	tooltip: {
+																		callbacks: {
+																			label: function(context) {
+																				return 'TWR: ' + context.raw.toFixed(2) + '%';
+																			}
+																		}
+																	}
 																},
 																scales: {
 																x: {
@@ -626,7 +644,10 @@
 																	}
 																},
 																y: {
-																	beginAtZero: false
+																	beginAtZero: false,
+																	ticks: {
+																		callback: function(value) { return value.toFixed(1) + '%'; }
+																	}
 																},
 																}
 															}
@@ -728,13 +749,13 @@
 																{
 																label: 'Capital Gains',
 																data: dataByPeriod{{ currency }}[initialPeriod{{ currency }}].capital_gains,
-																backgroundColor: 'rgba(54, 162, 235, 0.8)',
+																backgroundColor: 'rgba(0, 183, 100, 0.75)',
 																stack: 'combined',
 																},
 																{
 																label: 'Income',
 																data: dataByPeriod{{ currency }}[initialPeriod{{ currency }}].income,
-																backgroundColor: 'rgba(255, 206, 86, 0.8)',
+																backgroundColor: 'rgba(99, 179, 237, 0.8)',
 																stack: 'combined',
 																},
 																{
@@ -855,7 +876,7 @@
 	    <footer class="app-footer">
 		    <div class="container text-center py-3">
 		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small>
+            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
 		       
 		    </div>
 	    </footer><!--//app-footer-->

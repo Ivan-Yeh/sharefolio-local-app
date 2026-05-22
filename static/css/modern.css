@@ -1,0 +1,629 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Sharefolio — Modern UI
+   Loaded after portal.css; uses !important where needed to override the base
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Design tokens ──────────────────────────────────────────────────────── */
+:root {
+  --sf-green:         #00b764;
+  --sf-green-dark:    #007d44;
+  --sf-green-glow:    rgba(0, 183, 100, 0.22);
+  --sf-green-pale:    rgba(0, 183, 100, 0.07);
+  --sf-sidebar:       #0f1923;
+  --sf-sidebar-alt:   #152b1e;
+  --sf-page-bg:       #f0f4f8;
+  --sf-card-bg:       rgba(255, 255, 255, 0.88);
+  --sf-card-border:   rgba(0, 0, 0, 0.065);
+  --sf-shadow-xs:     0 1px 6px rgba(0, 0, 0, 0.05);
+  --sf-shadow-sm:     0 2px 16px rgba(0, 0, 0, 0.07);
+  --sf-shadow-md:     0 6px 32px rgba(0, 0, 0, 0.10);
+  --sf-radius:        16px;
+  --sf-radius-sm:     10px;
+  --sf-text:          #1a2233;
+  --sf-muted:         #6b7280;
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+body.app {
+  background: var(--sf-page-bg) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif !important;
+  color: var(--sf-text) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SIDEBAR
+   ═══════════════════════════════════════════════════════════════════════════ */
+.app-sidepanel {
+  background: linear-gradient(160deg, var(--sf-sidebar) 0%, var(--sf-sidebar-alt) 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.04) !important;
+  box-shadow: 4px 0 32px rgba(0, 0, 0, 0.18) !important;
+}
+
+.sidepanel-inner {
+  background: transparent !important;
+}
+
+/* Branding */
+.app-branding {
+  padding: 22px 18px 16px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  background: rgba(0, 183, 100, 0.05) !important;
+}
+
+.logo-text {
+  font-size: 1.3rem !important;
+  font-weight: 800 !important;
+  color: var(--sf-green) !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* Main nav links — preserve portal.css icon layout (icon is position:absolute; left:1rem) */
+.app-nav-main .nav-link {
+  color: rgba(255, 255, 255, 0.6) !important;
+  border-radius: 0 8px 8px 0 !important;
+  margin: 2px 8px 2px 0 !important;
+  padding: 10px 14px 10px 3rem !important;   /* 3rem left keeps icon clear */
+  font-weight: 500 !important;
+  font-size: 0.88rem !important;
+  transition: background 0.18s, color 0.18s !important;
+  border-left: 3px solid transparent !important;
+}
+
+.app-nav-main .nav-link:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-left-color: transparent !important;
+}
+
+.app-nav-main .nav-link.active {
+  background: rgba(0, 183, 100, 0.14) !important;
+  color: var(--sf-green) !important;
+  border-left-color: var(--sf-green) !important;
+}
+
+/* submenu-toggle active should not highlight (portal.css pattern) */
+.app-nav-main .nav-link.submenu-toggle.active {
+  background: none !important;
+  border-left-color: transparent !important;
+}
+
+/* portal.css sets nav-item background: #fff — clear it on dark sidebar */
+.app-nav .nav-item { background: transparent !important; }
+
+.app-nav-main .nav-icon { color: inherit !important; }
+
+/* Submenu — keep portal.css's ::before vertical-line structure intact */
+.submenu-list { padding: 0 !important; }
+
+.submenu-list .submenu-link {
+  color: rgba(255, 255, 255, 0.45) !important;
+  font-size: 0.84rem !important;
+  transition: background 0.15s, color 0.15s !important;
+  text-decoration: none !important;
+}
+
+.submenu-list .submenu-link:hover,
+.submenu-list .submenu-link.active {
+  color: var(--sf-green) !important;
+  background: rgba(0, 183, 100, 0.08) !important;
+}
+
+/* Tint the ::before bar to match dark sidebar */
+.submenu-list .submenu-link::before {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.submenu-list .submenu-link.active::before {
+  background-color: var(--sf-green) !important;
+}
+
+/* Footer nav */
+.app-sidepanel-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+  padding: 8px 0 !important;
+  background: rgba(0, 0, 0, 0.12) !important;
+}
+
+.app-nav-footer .nav-link {
+  color: rgba(255, 255, 255, 0.38) !important;
+  border-radius: 0 8px 8px 0 !important;
+  margin: 2px 8px 2px 0 !important;
+  padding: 8px 14px 8px 3rem !important;    /* keep 3rem for icon */
+  font-size: 0.83rem !important;
+  transition: background 0.15s, color 0.15s !important;
+  border-left: 3px solid transparent !important;
+}
+
+.app-nav-footer .nav-link:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.app-nav-footer .nav-link.active {
+  color: var(--sf-green) !important;
+  border-left-color: var(--sf-green) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOP HEADER
+   ═══════════════════════════════════════════════════════════════════════════ */
+.app-header {
+  background: rgba(240, 244, 248, 0.85) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PAGE TITLE
+   ═══════════════════════════════════════════════════════════════════════════ */
+.app-page-title {
+  font-size: 1.55rem !important;
+  font-weight: 800 !important;
+  color: var(--sf-text) !important;
+  letter-spacing: -0.025em !important;
+  margin-bottom: 1.25rem !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CARDS  (stat + chart)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.app-card {
+  background: var(--sf-card-bg) !important;
+  border: 1px solid var(--sf-card-border) !important;
+  border-radius: var(--sf-radius) !important;
+  box-shadow: var(--sf-shadow-sm) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease !important;
+}
+
+.app-card:hover {
+  box-shadow: var(--sf-shadow-md) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Stat card text */
+.app-card-stat .stats-type {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  color: var(--sf-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin-bottom: 6px !important;
+}
+
+.app-card-stat .stats-figure {
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  color: var(--sf-text) !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.15 !important;
+}
+
+.app-card-stat .stats-meta {
+  font-size: 0.8rem !important;
+  color: var(--sf-muted) !important;
+  margin-top: 4px !important;
+}
+
+/* Chart card header */
+.app-card-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+  background: transparent !important;
+}
+
+.app-card-title {
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  color: var(--sf-text) !important;
+  margin: 0 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAIN VIEW TABS  (Base / Asset Currency)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.tab-container { max-width: 100%; }
+
+.tab-buttons {
+  display: flex !important;
+  gap: 4px !important;
+  border-bottom: none !important;
+  padding: 4px !important;
+  margin-bottom: 20px !important;
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-radius: 50px !important;
+  width: fit-content !important;
+  border: 1px solid var(--sf-card-border) !important;
+  box-shadow: var(--sf-shadow-xs) !important;
+}
+
+.tab-buttons button {
+  background: transparent !important;
+  border: none !important;
+  padding: 8px 22px !important;
+  border-radius: 50px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  color: var(--sf-muted) !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+}
+
+.tab-buttons button.active {
+  background: var(--sf-green) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 10px var(--sf-green-glow) !important;
+  border-bottom: none !important;
+}
+
+.tab-buttons button:hover:not(.active) {
+  background: var(--sf-green-pale) !important;
+  color: var(--sf-green) !important;
+}
+
+/* Strip the old white card wrapper from tab content */
+.tab-content-modern {
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-top: 0 !important;
+}
+
+.tab-pane-modern { display: none; }
+.tab-pane-modern.active { display: block; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CURRENCY SUBTABS  (USD / AUD / TWD …)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.subtab-buttons {
+  display: flex !important;
+  gap: 8px !important;
+  margin-bottom: 20px !important;
+  flex-wrap: wrap !important;
+}
+
+.subtab-buttons button,
+.subtab-btn {
+  padding: 6px 18px !important;
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 50px !important;
+  cursor: pointer !important;
+  font-size: 0.84rem !important;
+  font-weight: 600 !important;
+  color: var(--sf-muted) !important;
+  transition: all 0.18s ease !important;
+}
+
+.subtab-buttons button.active,
+.subtab-btn.active {
+  background: var(--sf-green) !important;
+  border-color: var(--sf-green) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px var(--sf-green-glow) !important;
+}
+
+.subtab-buttons button:hover:not(.active),
+.subtab-btn:hover:not(.active) {
+  border-color: var(--sf-green) !important;
+  color: var(--sf-green) !important;
+  background: var(--sf-green-pale) !important;
+}
+
+.subtab-content { display: none; padding: 0 !important; }
+.subtab-content.active { display: block; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BOOTSTRAP NAV TABS  (Current / Closed / All positions)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.app-nav-tabs {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-radius: 50px !important;
+  padding: 4px !important;
+  border: 1px solid var(--sf-card-border) !important;
+  box-shadow: var(--sf-shadow-xs) !important;
+  margin-bottom: 20px !important;
+}
+
+.app-nav-tabs .nav-link {
+  border-radius: 50px !important;
+  padding: 7px 20px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: var(--sf-muted) !important;
+  border: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.app-nav-tabs .nav-link.active {
+  background: var(--sf-green) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 10px var(--sf-green-glow) !important;
+}
+
+.app-nav-tabs .nav-link:hover:not(.active) {
+  color: var(--sf-green) !important;
+  background: var(--sf-green-pale) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TABLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+.table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+.table thead th {
+  background: rgba(240, 244, 248, 0.9) !important;
+  color: var(--sf-muted) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  border: none !important;
+  padding: 10px 14px !important;
+}
+
+.table thead th:first-child { border-radius: 8px 0 0 8px !important; }
+.table thead th:last-child  { border-radius: 0 8px 8px 0 !important; }
+
+.table tbody td {
+  border: none !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+  padding: 12px 14px !important;
+  vertical-align: middle !important;
+  font-size: 0.875rem !important;
+}
+
+.app-table-hover tbody tr { transition: background 0.14s ease !important; }
+
+.app-table-hover tbody tr:hover td {
+  background: var(--sf-green-pale) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.btn {
+  border-radius: 50px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  transition: all 0.18s ease !important;
+}
+
+.btn.app-btn-primary,
+a.app-btn-primary,
+button.app-btn-primary {
+  background: var(--sf-green) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 2px 10px var(--sf-green-glow) !important;
+}
+
+.btn.app-btn-primary:hover,
+a.app-btn-primary:hover,
+button.app-btn-primary:hover {
+  background: var(--sf-green-dark) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 16px var(--sf-green-glow) !important;
+  color: #fff !important;
+}
+
+.btn.app-btn-secondary,
+a.app-btn-secondary,
+button.app-btn-secondary {
+  background: rgba(255, 255, 255, 0.85) !important;
+  color: var(--sf-text) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.btn.app-btn-secondary:hover,
+a.app-btn-secondary:hover,
+button.app-btn-secondary:hover {
+  background: var(--sf-green-pale) !important;
+  border-color: var(--sf-green) !important;
+  color: var(--sf-green) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Small edit buttons in table rows */
+.btn-sm.app-btn-secondary,
+a.btn-sm.app-btn-secondary {
+  padding: 4px 12px !important;
+  font-size: 0.78rem !important;
+  border-radius: 50px !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FORM CONTROLS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.form-control,
+.form-select {
+  border-radius: var(--sf-radius-sm) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(4px) !important;
+  font-size: 0.9rem !important;
+  transition: border-color 0.18s, box-shadow 0.18s !important;
+  box-shadow: none !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--sf-green) !important;
+  box-shadow: 0 0 0 3px rgba(0, 183, 100, 0.14) !important;
+  background: #fff !important;
+  outline: none !important;
+}
+
+.form-label {
+  font-size: 0.83rem !important;
+  font-weight: 600 !important;
+  color: var(--sf-muted) !important;
+  margin-bottom: 5px !important;
+}
+
+.form-text {
+  font-size: 0.8rem !important;
+  color: var(--sf-muted) !important;
+}
+
+.form-select-sm {
+  border-radius: 50px !important;
+  font-size: 0.82rem !important;
+  padding-left: 14px !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BADGES  (trade type BUY / SELL / ADJUSTMENT)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.badge {
+  border-radius: 50px !important;
+  font-weight: 700 !important;
+  padding: 4px 10px !important;
+  font-size: 0.73rem !important;
+  letter-spacing: 0.03em !important;
+}
+
+.badge.bg-success {
+  background: rgba(0, 183, 100, 0.12) !important;
+  color: #007040 !important;
+  border: 1px solid rgba(0, 183, 100, 0.28) !important;
+}
+
+.badge.bg-danger {
+  background: rgba(220, 38, 38, 0.10) !important;
+  color: #b91c1c !important;
+  border: 1px solid rgba(220, 38, 38, 0.22) !important;
+}
+
+.badge.bg-warning {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #92400e !important;
+  border: 1px solid rgba(245, 158, 11, 0.28) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   P&L COLOURS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.text-success { color: var(--sf-green) !important; font-weight: 600 !important; }
+.text-danger  { color: #ef4444 !important;         font-weight: 600 !important; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════════════════════ */
+.app-footer {
+  background: transparent !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+  color: var(--sf-muted) !important;
+}
+
+.app-footer .app-link,
+.app-footer a {
+  color: var(--sf-green) !important;
+  text-decoration: none !important;
+}
+
+.app-footer .app-link:hover,
+.app-footer a:hover {
+  color: var(--sf-green-dark) !important;
+  text-decoration: underline !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SETTINGS PAGE
+   ═══════════════════════════════════════════════════════════════════════════ */
+.section-title {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: var(--sf-text) !important;
+  margin-bottom: 6px !important;
+}
+
+.section-intro {
+  font-size: 0.85rem !important;
+  color: var(--sf-muted) !important;
+  line-height: 1.6 !important;
+}
+
+.app-card-settings {
+  border-radius: var(--sf-radius) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INFO / FAQ PAGE  — accordion tweaks
+   ═══════════════════════════════════════════════════════════════════════════ */
+.accordion-button.btn-link:not(.collapsed) {
+  color: var(--sf-green) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHART CONTAINERS  (normalise repeated inline styles)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.chart-container {
+  position: relative !important;
+  height: 300px !important;
+  width: 100% !important;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LOADING SCREEN
+   ═══════════════════════════════════════════════════════════════════════════ */
+#loading-screen {
+  background: rgba(240, 244, 248, 0.92) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+}
+
+.spinner {
+  border-color: rgba(0, 0, 0, 0.10) !important;
+  border-top-color: var(--sf-green) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE SIDEPANEL OVERLAY
+   ═══════════════════════════════════════════════════════════════════════════ */
+.sidepanel-drop {
+  background: rgba(0, 0, 0, 0.35) !important;
+  backdrop-filter: blur(3px) !important;
+  -webkit-backdrop-filter: blur(3px) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLLBAR (webkit)
+   ═══════════════════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar          { width: 6px; height: 6px; }
+::-webkit-scrollbar-track    { background: transparent; }
+::-webkit-scrollbar-thumb    { background: rgba(0,0,0,0.14); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.24); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MISC UTILITIES
+   ═══════════════════════════════════════════════════════════════════════════ */
+hr {
+  border-color: rgba(0, 0, 0, 0.07) !important;
+  opacity: 1 !important;
+}
+
+code {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 5px !important;
+  padding: 2px 6px !important;
+  color: var(--sf-green-dark) !important;
+  font-size: 0.85em !important;
+}

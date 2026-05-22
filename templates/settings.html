@@ -19,6 +19,7 @@
     <!-- App CSS -->  
     <!-- <link id="theme-style" rel="stylesheet" href="assets/css/portal.css"> -->
     <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/portal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head> 
@@ -93,7 +94,7 @@
 							        <span class="nav-icon">
 										<i class="fa fa-info"></i>
 									</span>
-			                        <span class="nav-link-text">Information</span>
+			                        <span class="nav-link-text">Help &amp; FAQ</span>
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 						    <li class="nav-item">
@@ -105,11 +106,11 @@
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 						    <li class="nav-item">
-						        <a class="nav-link" href="{{ url_for('logout') }}">
+						        <a class="nav-link" href="{{ url_for('index') }}">
 							        <span class="nav-icon">
-										<i class="fa fa-sign-out"></i>
+										<i class="fa fa-home"></i>
 									</span>
-			                        <span class="nav-link-text">Log out</span>
+			                        <span class="nav-link-text">Home</span>
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 					    </ul><!--//footer-menu-->
@@ -142,65 +143,59 @@
 			<hr class="mb-4">
 			<div class="row g-4 settings-section">
 				<div class="col-12 col-md-4">
-					<h3 class="section-title">Account & Portfolio</h3>
-					<div class="section-intro">Please note that your User ID and Base Currency cannot be changed. They have been set upon signup.</div>
+					<h3 class="section-title">Portfolio</h3>
+					<div class="section-intro">Select the currency all portfolio values are converted and displayed in. Changing this reloads the portfolio immediately.</div>
 				</div>
 				<div class="col-12 col-md-8">
 					<div class="app-card app-card-settings shadow-sm p-4">
 						<div class="app-card-body">
-							<form class="settings-form" method="POST" action="{{ url_for('update_settings') }}">
+							<form method="POST" action="{{ url_for('settings') }}">
 								<div class="mb-3">
-									<label for="uid" class="form-label">User ID</label>
-									<input type="text" class="form-control" id="uid" name="uid" value="{{ user.uid }}" readonly>
+									<label class="form-label">Base Currency</label>
+									<select name="base_currency" class="form-select" style="max-width:200px;">
+										{% for c in supported_currencies %}
+										<option value="{{ c }}" {% if c == base_currency %}selected{% endif %}>{{ c }}</option>
+										{% endfor %}
+									</select>
+									<div class="form-text">All trade prices and portfolio values are converted to this currency using historical FX rates.</div>
 								</div>
 								<div class="mb-3">
-									<label for="first_name" class="form-label">First Name</label>
-									<input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+									<label class="form-label">Data Directory</label>
+									<div class="d-flex align-items-center gap-2" style="max-width:500px;">
+										<input type="text" class="form-control" value="{{ app_data_dir }}" readonly>
+										<a href="/open-data-folder" class="btn app-btn-secondary text-nowrap" onclick="fetch('/open-data-folder'); return false;">
+											<i class="fa fa-folder-open me-1"></i>Show in Finder
+										</a>
+									</div>
+									<div class="form-text">Trade and income CSV files are stored here and persist across app updates.</div>
 								</div>
-								<div class="mb-3">
-									<label for="last_name" class="form-label">Last Name</label>
-									<input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}" required>
-								</div>
-								<div class="mb-3">
-									<label for="last_name" class="form-label">Email</label>
-									<input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
-								</div>
-								<div class="mb-3">
-									<label for="base_currency" class="form-label">Base Currency</label>
-									<input type="text" class="form-control" id="base_currency" name="base_currency" value="{{ user.base_currency }}" readonly>
-								</div>
-								<button type="submit" class="btn app-btn-primary">Save Changes</button>
+								<button type="submit" class="btn app-btn-primary">Save &amp; Reload</button>
 							</form>
-						</div><!--//app-card-body-->
-					</div><!--//app-card-->
+						</div>
+					</div>
 				</div>
 			</div><!--//row-->
 			<hr class="my-4">
 			<div class="row g-4 settings-section">
 				<div class="col-12 col-md-4">
-					<h3 class="section-title">Security</h3>
-					<div class="section-intro"></div>
+					<h3 class="section-title">Supported Exchanges</h3>
+					<div class="section-intro">Exchanges recognised for automatic price data fetching via Yahoo Finance.</div>
 				</div>
 				<div class="col-12 col-md-8">
 					<div class="app-card app-card-settings shadow-sm p-4">
 						<div class="app-card-body">
-							<form class="password-form mt-5" method="POST" action="{{ url_for('change_password') }}">
-								<div class="mb-3">
-									<label for="current_password" class="form-label">Current Password</label>
-									<input type="password" class="form-control" id="current_password" name="current_password" required>
-								</div>
-								<div class="mb-3">
-									<label for="new_password" class="form-label">New Password</label>
-									<input type="password" class="form-control" id="new_password" name="new_password" required>
-								</div>
-								<div class="mb-3">
-									<label for="confirm_password" class="form-label">Confirm New Password</label>
-									<input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-								</div>
-								<button type="submit" class="btn btn-danger">Change Password</button>
-							</form>
-						</div><!--//app-card-body-->
-					</div><!--//app-card-->
+							<table class="table mb-0">
+								<thead><tr><th>Code</th><th>Exchange</th><th>Currency</th></tr></thead>
+								<tbody>
+									<tr><td><code>US</code></td><td>NYSE / NASDAQ</td><td>USD 🇺🇸</td></tr>
+									<tr><td><code>AX</code></td><td>ASX (Australia)</td><td>AUD 🇦🇺</td></tr>
+									<tr><td><code>TO</code></td><td>TSX (Canada)</td><td>CAD 🇨🇦</td></tr>
+									<tr><td><code>TW</code></td><td>TWSE (Taiwan)</td><td>TWD 🇹🇼</td></tr>
+									<tr><td><code>TWO</code></td><td>OTC Market (Taiwan)</td><td>TWD 🇹🇼</td></tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div><!--//row-->
 			<hr class="my-4">
@@ -209,7 +204,7 @@
 	    <footer class="app-footer">
 		    <div class="container text-center py-3">
 		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small>
+            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
 		       
 		    </div>
 	    </footer><!--//app-footer-->

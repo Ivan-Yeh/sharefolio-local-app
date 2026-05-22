@@ -1,107 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Sharefolio - Investment Tracker</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="{{ url_for('static', filename='css/styles.css') }}"  rel="stylesheet" />
-    </head>
-    <body class="d-flex flex-column h-100">
-        <main class="flex-shrink-0">
-            <!-- Header-->
-            <header class="bg-dark py-5">
-                <div class="container px-5">
-                    <div class="row gx-5 align-items-center justify-content-center">
-                        <div class="col-lg-8 col-xl-7 col-xxl-6">
-                            <div class="my-5 text-center text-xl-start">
-                                <h1 class="display-5 fw-bolder text-white mb-2">Sharefolio</h1>
-                                <p class="lead fw-normal text-white-50 mb-4">Personal investment management made easy!</p>
-                                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                                    <a class="btn btn-primary btn-lg px-4 me-sm-3 loading" href="/login">Log in</a>
-                                    <a class="btn btn-outline-light btn-lg px-4 loading" href="/signup">Sign up</a>
-                                </div>
-                            </div>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Sharefolio — personal investment tracker" />
+    <title>Sharefolio — Investment Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+    <style>
+        :root {
+            --green: #00b764;
+            --green-dark: #007d44;
+            --green-pale: #e6f9f0;
+        }
+
+        /* ── Hero ─────────────────────────────────────────────── */
+        .hero {
+            background: linear-gradient(135deg, #0f1923 0%, #152b1e 60%, #1a3a28 100%);
+            padding: 100px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 70% 50%, rgba(0, 183, 100, 0.12) 0%, transparent 70%);
+        }
+        .hero-title {
+            font-size: clamp(2.4rem, 5vw, 3.6rem);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+        }
+        .hero-title span {
+            color: var(--green);
+        }
+        .hero-sub {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.65);
+            max-width: 480px;
+        }
+        .btn-enter {
+            background: var(--green);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: background 0.2s, transform 0.15s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-enter:hover {
+            background: var(--green-dark);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .badge-award {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,183,100,0.15);
+            border: 1px solid rgba(0,183,100,0.35);
+            color: #6effc0;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        /* ── Feature cards ────────────────────────────────────── */
+        .features { padding: 80px 0; }
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            color: #fff;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+        }
+        .feature-card {
+            padding: 32px 28px;
+            border-radius: 16px;
+            border: 1px solid #e8f0ea;
+            background: #fff;
+            height: 100%;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .feature-card:hover {
+            box-shadow: 0 8px 32px rgba(0,183,100,0.1);
+            transform: translateY(-3px);
+        }
+        .feature-card h5 { font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; }
+        .feature-card p  { font-size: 0.9rem; color: #666; margin: 0; }
+
+        /* ── Workflow steps ────────────────────────────────────── */
+        .workflow { background: var(--green-pale); padding: 72px 0; }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--green);
+            color: #fff;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .step { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 32px; }
+        .step:last-child { margin-bottom: 0; }
+        .step-body h6 { font-weight: 700; margin-bottom: 4px; }
+        .step-body p  { font-size: 0.9rem; color: #555; margin: 0; }
+
+        /* ── Quote ────────────────────────────────────────────── */
+        .quote-section { padding: 72px 0; }
+        .quote-card {
+            background: #fff;
+            border-left: 5px solid var(--green);
+            border-radius: 12px;
+            padding: 36px 40px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+        blockquote { font-size: 1.25rem; font-style: italic; color: #222; }
+
+        /* Override Start Bootstrap's height:100% which collapses flex columns */
+        html, body { height: auto !important; min-height: 100vh; }
+
+        /* ── Footer ───────────────────────────────────────────── */
+        footer.site-footer {
+            background: #0f1923;
+            color: rgba(255,255,255,0.5);
+            padding: 28px 0;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        footer.site-footer a { color: var(--green); text-decoration: none; }
+    </style>
+</head>
+<body class="d-flex flex-column">
+
+<!-- ── Hero ──────────────────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="container px-4 px-md-5 position-relative">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6">
+                <a href="#" class="badge-award text-decoration-none"
+                   onclick="event.preventDefault(); window.open('https://ivan-yeh.github.io/sharefolio.html', '_blank');">
+                    <i class="bi bi-trophy-fill"></i>
+                    Best Undergraduate Junior Project 2023 · Citadel Securities
+                </a>
+                <h1 class="hero-title mb-3">
+                    Your investments,<br><span>clearly tracked.</span>
+                </h1>
+                <p class="hero-sub mb-5">
+                    Sharefolio is an investment portfolio tracker that automatically fetches
+                    price &amp; FX data, calculates FIFO returns, and gives you full insight
+                    across multiple exchanges and currencies.
+                </p>
+                <a href="#" class="btn-enter" data-nav="{{ url_for('portfolio') }}"
+                   onclick="event.preventDefault(); if(typeof showLoading==='function') showLoading(); window.location.href=this.dataset.nav;">
+                    Open Portfolio &rarr;
+                </a>
+            </div>
+            <div class="col-lg-6 d-none d-lg-flex justify-content-center">
+                <!-- Illustrative mini stats panel -->
+                <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:32px 40px;min-width:320px;">
+                    <div style="color:rgba(255,255,255,0.5);font-size:0.8rem;margin-bottom:6px;">Total Portfolio Value</div>
+                    <div id="demo-portfolio-value" style="font-size:2rem;font-weight:800;color:#fff;margin-bottom:20px;">$0.00</div>
+                    <div class="d-flex gap-3">
+                        <div style="flex:1;background:rgba(0,183,100,0.12);border-radius:12px;padding:14px 16px;">
+                            <div style="color:rgba(255,255,255,0.45);font-size:0.75rem;">Total Return</div>
+                            <div id="demo-total-return" style="color:#6effc0;font-weight:700;font-size:1.05rem;">+0.0%</div>
                         </div>
-                    </div>
-                </div>
-            </header>
-            <!-- Features section-->
-            <section class="py-5" id="features">
-                <div class="container px-5 my-5">
-                    <div class="row gx-5">
-                        <div class="col-lg-4 mb-5 mb-lg-0"><h2 class="fw-bolder mb-0">Your investments deserve better than spreadsheets.</h2></div>
-                        <div class="col-lg-8">
-                            <div class="row gx-5 row-cols-1 row-cols-md-2">
-                                <div class="col mb-5 h-100">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-globe"></i></div>
-                                    <h2 class="h5">International Markets</h2>
-                                    <p class="mb-0">Sharefolio supports securities traded on the ASX, NYSE, NASDAQ, TSX, TWSE and Taiwan OTC markets.</p>
-                                </div>
-                                <div class="col mb-5 h-100">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-bank2"></i></div>
-                                    <h2 class="h5">Listed & Unlisted Securities</h2>
-                                    <p class="mb-0">Sharefolio automatically fetches price data for listed securities. What's more, you can also bookkeep unlisted securities & assets.</p>
-                                </div>
-                                <div class="col mb-5 mb-md-0 h-100">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-currency-exchange"></i></i></div>
-                                    <h2 class="h5">Auto FX Conversion</h2>
-                                    <p class="mb-0">Sharefolio supports assets traded in AUD, USD, CAD and TWD. You can track your portfolio in asset currencies and your base currency without needing to convert currencies manually.</p>
-                                </div>
-                                <div class="col h-100">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="bi bi-toggles2"></i></div>
-                                    <h2 class="h5">Easy Insights</h2>
-                                    <p class="mb-0">Sharefolio analyses your portfolio automatically based on the transactions you provide, so you don't have to work out the maths yourself!</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- Testimonial section-->
-            <div class="py-5 bg-light">
-                <div class="container px-5 my-5">
-                    <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-10 col-xl-7">
-                            <div class="text-center">
-                                <p>Developed by <a href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a>, Sharefolio is the next-generation upgrade to Sharefolio Analyser ASX</p>
-                                <hr>
-                                <div class="fs-4 mb-4 fst-italic">"Sharefolio Analyser ASX won the Best Undergraduate Junior Project Award 2023"</div>
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <div class="fw-bold">
-                                        Citadel Securities, Australia
-                                    </div>
-                                </div>
-                                <a href="https://ivan-yeh.github.io/sharefolio.html" target="_blank">More Details</a>
-                                <hr>
-                                <p>Now with international market coverage, multi-currency support and an enhanced interface built for smarter investing.</p>
-                                
-                            </div>
+                        <div style="flex:1;background:rgba(0,183,100,0.12);border-radius:12px;padding:14px 16px;">
+                            <div style="color:rgba(255,255,255,0.45);font-size:0.75rem;">Dividends</div>
+                            <div id="demo-dividends" style="color:#6effc0;font-weight:700;font-size:1.05rem;">+0.0%</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
-        <!-- Footer-->
-        <footer class="bg-dark py-4 mt-auto">
-            <div class="container px-5">
-                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0 text-white">Copyright &copy; Sharefolio {{ year }}</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Features ────────────────────────────────────────────────────────── -->
+<section class="features">
+    <div class="container px-4 px-md-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bolder fs-2">Everything you need to understand your portfolio</h2>
+            <p class="text-muted">No spreadsheets. No manual conversions. Just clear numbers.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-xl-3">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-globe2"></i></div>
+                    <h5>Multi-Exchange</h5>
+                    <p>Track securities on ASX, NYSE/NASDAQ, TSX, TWSE and OTC Taiwan — all in one place.</p>
                 </div>
             </div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+            <div class="col-md-6 col-xl-3">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-currency-exchange"></i></div>
+                    <h5>Auto FX Conversion</h5>
+                    <p>Historical FX rates are fetched automatically. Switch between base and asset currencies at any time.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-bar-chart-steps"></i></div>
+                    <h5>FIFO Cost Basis</h5>
+                    <p>Accurate lot-by-lot FIFO accounting for realised and unrealised P&amp;L. Handles splits and DRP trades.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-pie-chart-fill"></i></div>
+                    <h5>Rich Analytics</h5>
+                    <p>Monthly, quarterly and annual performance charts. Allocation pie. Full holding-level drill-down.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-        {% include "loading.html" %}
+<!-- ── How it works ─────────────────────────────────────────────────────── -->
+<section class="workflow">
+    <div class="container px-4 px-md-5">
+        <div class="row gy-5 align-items-center">
+            <div class="col-lg-5">
+                <h2 class="fw-bolder fs-2 mb-3">How it works</h2>
+                <p class="text-muted mb-0">
+                    Sharefolio reads your trade and income records and does all
+                    the heavy lifting — price fetching, FX conversion, FIFO
+                    accounting and return calculation — automatically.
+                </p>
+            </div>
+            <div class="col-lg-6 offset-lg-1">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-body">
+                        <h6>Record your trades</h6>
+                        <p>Enter each buy, sell or adjustment on the Trades page. Upload a CSV if you have existing records.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-body">
+                        <h6>Record dividends &amp; income</h6>
+                        <p>Log dividends, distributions and tax credits. DRP? Add the reinvestment trade in the same form.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-body">
+                        <h6>Open your Portfolio</h6>
+                        <p>Prices and FX rates are fetched automatically. Your full performance history is ready instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    </body>
+<!-- ── Quote ────────────────────────────────────────────────────────────── -->
+<section class="quote-section">
+    <div class="container px-4 px-md-5">
+        <div class="quote-card mx-auto" style="max-width: 760px;">
+            <blockquote class="mb-3">
+                "Sharefolio Analyser ASX won the Best Undergraduate Junior Project Award 2023"
+            </blockquote>
+            <div class="d-flex align-items-center gap-3">
+                <div>
+                    <div class="fw-bold">Citadel Securities, Australia</div>
+                    <div class="text-muted small">
+                        Developed by <a href="#" onclick="event.preventDefault(); window.open('https://www.linkedin.com/in/ivan-yeh-58367122b/', '_blank');">Ivan Yeh</a>
+                        &nbsp;·&nbsp;
+                        <a href="#" onclick="event.preventDefault(); window.open('https://ivan-yeh.github.io/sharefolio.html', '_blank');">Project details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────────────────────────── -->
+<footer class="site-footer mt-auto">
+    <div class="container px-4">
+        Copyright &copy; Sharefolio {{ year }}
+        &nbsp;·&nbsp;
+        <a href="{{ url_for('info') }}">FAQ &amp; Help</a>
+        <br><small style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
+    </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+{% include "loading.html" %}
+<script>
+(function () {
+    const valueEl   = document.getElementById('demo-portfolio-value');
+    const returnEl  = document.getElementById('demo-total-return');
+    const divEl     = document.getElementById('demo-dividends');
+
+    let currentValue   = 0;
+    let currentReturn  = 0;
+    let currentDivs    = 0;
+
+    const TICK_INTERVAL = 80;
+    const REFRESH_MS    = 3000;
+
+    function rand(min, max, dp) {
+        return parseFloat((Math.random() * (max - min) + min).toFixed(dp));
+    }
+
+    function tickNumber(el, fromVal, toVal, formatter, steps) {
+        let step = 0;
+        const diff = toVal - fromVal;
+        const id = setInterval(() => {
+            step++;
+            const t = step / steps;
+            const eased = 1 - Math.pow(1 - t, 3);
+            const cur = fromVal + diff * eased;
+            el.textContent = formatter(cur);
+            if (step >= steps) {
+                clearInterval(id);
+                el.textContent = formatter(toVal);
+            }
+        }, TICK_INTERVAL);
+    }
+
+    function fmtValue(v) {
+        return '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function fmtPct(v) {
+        return '+' + v.toFixed(1) + '%';
+    }
+
+    function refresh() {
+        const newValue  = rand(80000, 250000, 2);
+        const newReturn = rand(5, 60, 1);
+        const newDivs   = rand(1, 15, 1);
+        const steps     = 18;
+
+        tickNumber(valueEl,  currentValue,  newValue,  fmtValue, steps);
+        tickNumber(returnEl, currentReturn, newReturn, fmtPct,   steps);
+        tickNumber(divEl,    currentDivs,   newDivs,   fmtPct,   steps);
+
+        currentValue  = newValue;
+        currentReturn = newReturn;
+        currentDivs   = newDivs;
+    }
+
+    refresh();
+    setInterval(refresh, REFRESH_MS);
+})();
+</script>
+</body>
 </html>

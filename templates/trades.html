@@ -19,6 +19,7 @@
     <!-- App CSS -->  
     <!-- <link id="theme-style" rel="stylesheet" href="assets/css/portal.css"> -->
     <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/portal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head> 
@@ -93,7 +94,7 @@
 							        <span class="nav-icon">
 										<i class="fa fa-info"></i>
 									</span>
-			                        <span class="nav-link-text">Information</span>
+			                        <span class="nav-link-text">Help &amp; FAQ</span>
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 						    <li class="nav-item">
@@ -105,11 +106,11 @@
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 						    <li class="nav-item">
-						        <a class="nav-link" href="{{ url_for('logout') }}">
+						        <a class="nav-link" href="{{ url_for('index') }}">
 							        <span class="nav-icon">
-										<i class="fa fa-sign-out"></i>
+										<i class="fa fa-home"></i>
 									</span>
-			                        <span class="nav-link-text">Log out</span>
+			                        <span class="nav-link-text">Home</span>
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 					    </ul><!--//footer-menu-->
@@ -138,6 +139,11 @@
 					                    <div class="col-auto">
 					                        <button type="submit" class="btn app-btn-secondary">Search</button>
 					                    </div>
+					                    {% if request.args.get('keyword', '') %}
+					                    <div class="col-auto">
+					                        <a href="{{ url_for('trades') }}" class="btn app-btn-secondary"><i class="fa fa-times me-1"></i>Clear</a>
+					                    </div>
+					                    {% endif %}
 					                </form>
 					                
 							    </div><!--//col-->
@@ -152,7 +158,7 @@
 								</form>
 
 								<div class="col-auto">
-									<a class="btn app-btn-secondary" href="" onclick="document.getElementById('csv-file').click(); return false;">
+									<a class="btn app-btn-secondary" href="#" onclick="document.getElementById('csv-file').click(); return false;">
 										<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-upload me-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 											<path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
 											<path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
@@ -160,13 +166,13 @@
 										Upload CSV
 									</a>
 								</div>
-							    <div class="col-auto">						    
-								    <a class="btn app-btn-secondary" href="{{ url_for('download_trades') }}">
+							    <div class="col-auto">
+								    <a class="btn app-btn-secondary" href="{{ url_for('download_trades') }}" data-save-csv="trades">
 									    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download me-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 											<path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
 											<path fill-rule="evenodd" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
 										</svg>
-									    Download CSV
+									    Save CSV
 									</a>
 							    </div>
 						    </div><!--//row-->
@@ -212,7 +218,7 @@
 									{% for trade in trades %}
 									<tr>
 										<td class="cell" hidden>{{ trade.id }}</td>
-										<td class="cell">{{ trade.date }}</td>
+										<td class="cell">{{ trade.date_display }}</td>
 										<td class="cell">{{ trade.ticker }}</td>
 										<td class="cell">{{ exchange_names[trade.exchange] }} </td>
 										<td class="cell">{{ trade.currency }} {{ currency_icons[trade.currency] }}</td>
@@ -250,7 +256,7 @@
 	    <footer class="app-footer">
 		    <div class="container text-center py-3">
 		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small>
+            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
 		       
 		    </div>
 	    </footer><!--//app-footer-->

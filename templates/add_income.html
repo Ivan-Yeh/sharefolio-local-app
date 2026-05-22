@@ -19,6 +19,7 @@
     <!-- App CSS -->  
     <!-- <link id="theme-style" rel="stylesheet" href="assets/css/portal.css"> -->
     <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/portal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head> 
@@ -93,7 +94,7 @@
 							        <span class="nav-icon">
 										<i class="fa fa-info"></i>
 									</span>
-			                        <span class="nav-link-text">Information</span>
+			                        <span class="nav-link-text">Help &amp; FAQ</span>
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 						    <li class="nav-item">
@@ -105,11 +106,11 @@
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 						    <li class="nav-item">
-						        <a class="nav-link" href="{{ url_for('logout') }}">
+						        <a class="nav-link" href="{{ url_for('index') }}">
 							        <span class="nav-icon">
-										<i class="fa fa-sign-out"></i>
+										<i class="fa fa-home"></i>
 									</span>
-			                        <span class="nav-link-text">Log out</span>
+			                        <span class="nav-link-text">Home</span>
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 					    </ul><!--//footer-menu-->
@@ -161,9 +162,9 @@
 							<input type="number" step="any" id="amount" name="amount" class="form-control" required>
 						</div>
 
-						<!-- Tax Imputation -->
+						<!-- Tax Credit -->
 						<div class="col-md-4">
-							<label for="imputation" class="form-label">Tax Imputation</label>
+							<label for="imputation" class="form-label">Tax Credit</label>
 							<input type="number" step="any"  id="imputation" name="imputation" class="form-control" required>
 						</div>
 
@@ -249,7 +250,7 @@
 	    <footer class="app-footer">
 		    <div class="container text-center py-3">
 		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small>
+            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
 		       
 		    </div>
 	    </footer><!--//app-footer-->

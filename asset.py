@@ -3,7 +3,7 @@ import pandas as pd
 
 class Asset:
 
-    __slots__ = ["ticker", "exchange", "name", "currency", "trades", "dividends", "historical_prices", "historical_fx", "holdings", "daily_performance_df", "current_cost_basis", "current_market_value", "current_unrealised_pnl", "total_realised_pnl", "total_pnl", "total_dividends", "cumulative_total_return", "commitment"]
+    __slots__ = ["ticker", "exchange", "name", "currency", "trades", "dividends", "historical_prices", "historical_fx", "holdings", "daily_performance_df", "current_cost_basis", "current_market_value", "current_unrealised_pnl", "total_realised_pnl", "total_pnl", "total_dividends", "cumulative_total_return", "commitment", "cumulative_twr"]
 
     def __init__(self, 
                  ticker: str, 
@@ -37,10 +37,11 @@ class Asset:
         self.current_unrealised_pnl: float = self.daily_performance_df["unrealised_pnl"].iloc[-1].round(2)
         self.total_realised_pnl: float = self.daily_performance_df["realised_pnl"].iloc[-1].round(2)
         self.total_pnl = round(self.total_realised_pnl + self.current_unrealised_pnl, 2)
-        self.total_dividends: float = self.daily_performance_df["dividends"].iloc[-1] + self.daily_performance_df["tax_credit"].iloc[-1].round(2)
+        self.total_dividends: float = round(float(self.daily_performance_df["dividends"].iloc[-1]) + float(self.daily_performance_df["tax_credit"].iloc[-1]), 2)
         self.cumulative_total_return: float = self.daily_performance_df["total_return"].iloc[-1].round(2)
         self.commitment: float = self.daily_performance_df["commitment"].iloc[-1].round(2)
-        
+        self.cumulative_twr: float = float(self.daily_performance_df["twr"].iloc[-1])
+
 
     def cost_basis_on_date(self, date: pd.Timestamp) -> tuple[float, float]:
         # fifo method to compute cost basis
@@ -97,10 +98,9 @@ class Asset:
                          relevant_trades[relevant_trades["type"] == "ADJUSTMENT"]["quantity"].sum())
         return holdings
     
-    def dividends_on_date(self, date: pd.Timestamp) -> float:
+    def dividends_on_date(self, date: pd.Timestamp) -> tuple[float, float]:
         relevant_dividends = self.dividends[self.dividends.index <= date]
-        dividends = float(relevant_dividends["amount"].sum() +
-                          relevant_dividends["fees"].sum()) 
+        dividends = float(relevant_dividends["amount"].sum() - relevant_dividends["fees"].sum())
         credits = float(relevant_dividends["tax_credit"].sum())
         return dividends, credits
 
@@ -158,6 +158,9 @@ class Asset:
             daily_df["market_value"] = 0.0
             daily_df["unrealised_pnl"] = 0.0
             daily_df["total_return"] = 0.0
+            daily_df["buy_cost"] = 0.0
+            daily_df["eod_returns"] = 0.0
+            daily_df["twr"] = 0.0
             return daily_df
 
         def sign(value: float) -> int:
@@ -171,16 +174,22 @@ class Asset:
 
         for ts, trade_type, quantity, price, fees in self.trades[["type", "quantity", "price", "fees"]].itertuples(index=True, name=None):
             signed_quantity = -quantity if trade_type == "SELL" else quantity
-            adjusted_price = price + fees / abs(signed_quantity) if signed_quantity > 0 else price - fees / abs(signed_quantity)
+            if signed_quantity != 0:
+                adjusted_price = price + fees / abs(signed_quantity) if signed_quantity > 0 else price - fees / abs(signed_quantity)
+            else:
+                adjusted_price = price
             trade_cashflow = -signed_quantity * adjusted_price
             events.append((pd.Timestamp(ts).normalize(), 1, signed_quantity, adjusted_price, 0.0, 0.0, trade_cashflow))
 
         for ts, amount, tax_credit, fees in self.dividends[["amount", "tax_credit", "fees"]].itertuples(index=True, name=None):
-            dividend_total = amount + fees
-            dividend_cashflow = amount - fees
-            events.append((pd.Timestamp(ts).normalize(), 0, 0.0, 0.0, dividend_total, tax_credit, dividend_cashflow))
+            # Net cash from income: fees are a cost that reduces the amount received
+            dividend_net = amount - fees
+            events.append((pd.Timestamp(ts).normalize(), 0, 0.0, 0.0, dividend_net, tax_credit, dividend_net))
 
         events.sort(key=lambda event: (event[0], event[1]))
+
+        daily_buy_cost: dict[pd.Timestamp, float] = {}
+        daily_eod_returns: dict[pd.Timestamp, float] = {}
 
         holdings = 0.0
         balance = 0.0
@@ -222,6 +231,13 @@ class Asset:
                     lots.append((remaining_quantity, price))
                     cost_basis += remaining_quantity * price
 
+            if event_type == 0:
+                daily_eod_returns[event_date] = daily_eod_returns.get(event_date, 0.0) + cashflow + tax_credit
+            elif cashflow < 0:
+                daily_buy_cost[event_date] = daily_buy_cost.get(event_date, 0.0) + (-cashflow)
+            elif cashflow > 0:
+                daily_eod_returns[event_date] = daily_eod_returns.get(event_date, 0.0) + cashflow
+
             balance += cashflow
             if balance < 0:
                 capital_committed += -balance
@@ -247,6 +263,15 @@ class Asset:
         daily_df["market_value"] = daily_df["close"] * daily_df["holdings"]
         daily_df["unrealised_pnl"] = daily_df["market_value"] - daily_df["cost_basis"]
         daily_df["total_return"] = daily_df["realised_pnl"] + daily_df["unrealised_pnl"] + daily_df["dividends"] + daily_df["tax_credit"]
+
+        daily_df["buy_cost"] = pd.Series(daily_buy_cost, dtype=float).reindex(daily_df.index).fillna(0.0)
+        daily_df["eod_returns"] = pd.Series(daily_eod_returns, dtype=float).reindex(daily_df.index).fillna(0.0)
+        prev_mv = daily_df["market_value"].shift(1).fillna(0.0)
+        denom = prev_mv + daily_df["buy_cost"]
+        numer = daily_df["market_value"] + daily_df["eod_returns"]
+        hpr = (numer / denom.where(denom > 0)).fillna(1.0) - 1.0
+        daily_df["twr"] = (1.0 + hpr).cumprod() - 1.0
+
         return daily_df
 
     def _safe_pct(self, numerator: pd.Series, denominator: pd.Series) -> pd.Series:
@@ -256,19 +281,33 @@ class Asset:
     def _period_change(self, cumulative_series: pd.Series) -> pd.Series:
         return cumulative_series.sub(cumulative_series.shift(1)).fillna(cumulative_series)
 
+    def _opening_balance(self, performance_df: pd.DataFrame) -> pd.Series:
+        """Beginning-of-period market value as the denominator for period return %.
+        Falls back to cost_basis for the first period (no prior market value)."""
+        prev_mv = performance_df["market_value"].shift(1)
+        return prev_mv.where(prev_mv.notna() & (prev_mv != 0), performance_df["cost_basis"])
+
+    _PERIOD_ALIAS: dict[str, str] = {"ME": "M", "QE": "Q", "6ME": "6M", "YE": "Y"}
+
     def _periodic_snapshot(self, freq: str) -> pd.DataFrame:
         daily_df = self.daily_performance_df.sort_index().copy()
         if daily_df.empty:
             return daily_df
 
+        # Trim to first date with actual activity (first trade)
+        active = daily_df[daily_df['cost_basis'] != 0]
+        if not active.empty:
+            daily_df = daily_df[daily_df.index >= active.index[0]]
+
         periodic_df = daily_df.groupby(pd.Grouper(freq=freq)).tail(1).copy()
         periodic_df.sort_index(inplace=True)
 
-        period_labels = periodic_df.index.to_period(freq).astype(str).to_series(index=periodic_df.index)
+        period_freq = self._PERIOD_ALIAS.get(freq, freq)
+        period_labels = periodic_df.index.to_period(period_freq).astype(str).to_series(index=periodic_df.index)
         period_labels.iloc[-1] = "to date"
         periodic_df.insert(0, "period", period_labels)
         return periodic_df
-    
+
     def cumulative_performance(self, freq: str = "M") -> pd.DataFrame:
         periodic_df = self._periodic_snapshot(freq)
         if periodic_df.empty:
@@ -286,6 +325,7 @@ class Asset:
             "dividends",
             "tax_credit",
             "total_return",
+            "twr",
         ]
         performance_df = periodic_df[base_cols].copy()
 
@@ -306,11 +346,13 @@ class Asset:
         performance_df["period_total_dividends"] = self._period_change(total_dividends)
         performance_df["period_total_return"] = self._period_change(performance_df["total_return"])
 
-        performance_df["period_realised_pnl_pct"] = self._safe_pct(performance_df["period_realised_pnl"], performance_df["commitment"])
-        performance_df["period_unrealised_pnl_pct"] = self._safe_pct(performance_df["period_unrealised_pnl"], performance_df["commitment"])
-        performance_df["period_total_pnl_pct"] = self._safe_pct(performance_df["period_total_pnl"], performance_df["commitment"])
-        performance_df["period_total_dividends_pct"] = self._safe_pct(performance_df["period_total_dividends"], performance_df["commitment"])
-        performance_df["period_total_return_pct"] = self._safe_pct(performance_df["period_total_return"], performance_df["commitment"])
+        opening = self._opening_balance(performance_df)
+        performance_df["period_realised_pnl_pct"] = self._safe_pct(performance_df["period_realised_pnl"], opening)
+        performance_df["period_unrealised_pnl_pct"] = self._safe_pct(performance_df["period_unrealised_pnl"], opening)
+        performance_df["period_total_pnl_pct"] = self._safe_pct(performance_df["period_total_pnl"], opening)
+        performance_df["period_total_dividends_pct"] = self._safe_pct(performance_df["period_total_dividends"], opening)
+        prev_twr = performance_df["twr"].shift(1).fillna(0.0)
+        performance_df["period_total_return_pct"] = (1.0 + performance_df["twr"]) / (1.0 + prev_twr) - 1.0
         return performance_df
 
 
@@ -330,6 +372,7 @@ class Asset:
             "dividends",
             "tax_credit",
             "total_return",
+            "twr",
         ]
         performance_df = periodic_df[base_cols].copy()
 
@@ -344,9 +387,10 @@ class Asset:
         performance_df["period_total_dividends"] = self._period_change(total_dividends)
         performance_df["period_open_return"] = self._period_change(performance_df["open_return"])
 
-        performance_df["period_unrealised_pnl_pct"] = self._safe_pct(performance_df["period_unrealised_pnl"], performance_df["commitment"])
-        performance_df["period_total_dividends_pct"] = self._safe_pct(performance_df["period_total_dividends"], performance_df["commitment"])
-        performance_df["period_open_return_pct"] = self._safe_pct(performance_df["period_open_return"], performance_df["commitment"])
+        opening = self._opening_balance(performance_df)
+        performance_df["period_unrealised_pnl_pct"] = self._safe_pct(performance_df["period_unrealised_pnl"], opening)
+        performance_df["period_total_dividends_pct"] = self._safe_pct(performance_df["period_total_dividends"], opening)
+        performance_df["period_open_return_pct"] = self._safe_pct(performance_df["period_open_return"], opening)
         return performance_df
 
 

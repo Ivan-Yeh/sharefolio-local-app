@@ -19,6 +19,7 @@
     <!-- App CSS -->  
     <!-- <link id="theme-style" rel="stylesheet" href="assets/css/portal.css"> -->
     <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/portal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head> 
@@ -93,7 +94,7 @@
 							        <span class="nav-icon">
 										<i class="fa fa-info"></i>
 									</span>
-			                        <span class="nav-link-text">Information</span>
+			                        <span class="nav-link-text">Help &amp; FAQ</span>
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 						    <li class="nav-item">
@@ -105,11 +106,11 @@
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 						    <li class="nav-item">
-						        <a class="nav-link" href="{{ url_for('logout') }}">
+						        <a class="nav-link" href="{{ url_for('index') }}">
 							        <span class="nav-icon">
-										<i class="fa fa-sign-out"></i>
+										<i class="fa fa-home"></i>
 									</span>
-			                        <span class="nav-link-text">Log out</span>
+			                        <span class="nav-link-text">Home</span>
 						        </a><!--//nav-link-->
 						    </li><!--//nav-item-->
 					    </ul><!--//footer-menu-->
@@ -221,16 +222,16 @@
 								<div class="tab-pane fade show active" id="current-positions-base-currency" role="tabpanel" aria-labelledby="current-positions-base-currency-tab">
 									<div class="app-card-body">
 										<div class="table-responsive">
-											<table class="table app-table-hover mb-0 text-left">
+											<table class="table app-table-hover mb-0 text-left sortable-table">
 												<thead>
 													<tr>
-														<th class="cell">Ticker</th>
-														<th class="cell">Currency</th>
-														<th class="cell">Price</th>
-														<th class="cell">Quantity</th>
-														<th class="cell">Value ({{ base_currency }})</th>
-														<th class="cell">Total Return ({{ base_currency }}) $</th>
-														<th class="cell">Total Return %</th>
+														<th class="cell" data-col="0">Ticker <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="1">Currency <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="2">Price <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="3">Quantity <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="4">Value ({{ base_currency }}) <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="5">Total Return ({{ base_currency }}) $ <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="6">Total Return % <span class="sort-icon">↕</span></th>
 														<th class="cell"></th>
 													</tr>
 												</thead>
@@ -240,7 +241,7 @@
 													<td class="cell">{{ asset.ticker or "N/A" }}</td>
 													<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
 														{% if asset.current_share_price is defined and asset.current_share_price is not none %}
 														{{ "{:,.2f}".format(asset.current_share_price) }} {{ asset.currency }}
 														{% else %}
@@ -248,7 +249,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.current_holdings or 0 }}">
 														{% if asset.current_holdings is defined and asset.current_holdings is not none %}
 														{{ "{:,.2f}".format(asset.current_holdings) }}
 														{% else %}
@@ -256,7 +257,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.current_value_base_currency or 0 }}">
 														{% if asset.current_value_base_currency is defined and asset.current_value_base_currency is not none %}
 														{{ "{:,.2f}".format(asset.current_value_base_currency) }} 
 														{% else %}
@@ -264,7 +265,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.total_return_dollar_base_currency }}">
 														{% if asset.total_return_dollar_base_currency is defined and asset.total_return_dollar_base_currency is not none %}
 														<span class="{{ 'text-success' if asset.total_return_dollar_base_currency >= 0 else 'text-danger' }}">
 															{{ "{:,.2f}".format(asset.total_return_dollar_base_currency) }}
@@ -274,7 +275,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.total_return_pct_base_currency }}">
 														{% if asset.total_return_pct_base_currency is defined and asset.total_return_pct_base_currency is not none %}
 														<span class="{{ 'text-success' if asset.total_return_pct_base_currency >= 0 else 'text-danger' }}">
 															{{ "{:,.2f}".format(asset.total_return_pct_base_currency * 100) }}%
@@ -299,16 +300,16 @@
 								<div class="tab-pane fade" id="closed-positions-base-currency" role="tabpanel" aria-labelledby="closed-positions-base-currency-tab">
 									<div class="app-card-body">
 										<div class="table-responsive">
-											<table class="table app-table-hover mb-0 text-left">
+											<table class="table app-table-hover mb-0 text-left sortable-table">
 												<thead>
 													<tr>
-														<th class="cell">Ticker</th>
-														<th class="cell">Currency</th>
-														<th class="cell">Price</th>
-														<th class="cell">Quantity</th>
-														<th class="cell">Value ({{ base_currency }})</th>
-														<th class="cell">Total Return ({{ base_currency }}) $</th>
-														<th class="cell">Total Return %</th>
+														<th class="cell" data-col="0">Ticker <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="1">Currency <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="2">Price <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="3">Quantity <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="4">Value ({{ base_currency }}) <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="5">Total Return ({{ base_currency }}) $ <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="6">Total Return % <span class="sort-icon">↕</span></th>
 														<th class="cell"></th>
 													</tr>
 												</thead>
@@ -318,7 +319,7 @@
 													<td class="cell">{{ asset.ticker or "N/A" }}</td>
 													<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
 														{% if asset.current_share_price is defined and asset.current_share_price is not none %}
 														{{ asset.current_share_price }} {{ asset.currency }} 
 														{% else %}
@@ -326,7 +327,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.current_holdings or 0 }}">
 														{% if asset.current_holdings is defined and asset.current_holdings is not none %}
 														{{ "{:,.2f}".format(asset.current_holdings) }}
 														{% else %}
@@ -334,7 +335,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.current_value_base_currency or 0 }}">
 														{% if asset.current_value_base_currency is defined and asset.current_value_base_currency is not none %}
 														{{ "{:,.2f}".format(asset.current_value_base_currency) }}
 														{% else %}
@@ -342,7 +343,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.total_return_dollar_base_currency }}">
 														{% if asset.total_return_dollar_base_currency is defined and asset.total_return_dollar_base_currency is not none %}
 														<span class="{{ 'text-success' if asset.total_return_dollar_base_currency >= 0 else 'text-danger' }}">
 															{{ "{:,.2f}".format(asset.total_return_dollar_base_currency) }}
@@ -352,7 +353,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.total_return_pct_base_currency }}">
 														{% if asset.total_return_pct_base_currency is defined and asset.total_return_pct_base_currency is not none %}
 														<span class="{{ 'text-success' if asset.total_return_pct_base_currency >= 0 else 'text-danger' }}">
 															{{ "{:,.2f}".format(asset.total_return_pct_base_currency * 100) }}%
@@ -377,16 +378,16 @@
 								<div class="tab-pane fade" id="all-positions-base-currency" role="tabpanel" aria-labelledby="all-positions-base-currency-tab">
 									<div class="app-card-body">
 										<div class="table-responsive">
-											<table class="table app-table-hover mb-0 text-left">
+											<table class="table app-table-hover mb-0 text-left sortable-table">
 												<thead>
 													<tr>
-														<th class="cell">Ticker</th>
-														<th class="cell">Currency</th>
-														<th class="cell">Price</th>
-														<th class="cell">Quantity</th>
-														<th class="cell">Value ({{ base_currency }})</th>
-														<th class="cell">Total Return ({{ base_currency }}) $</th>
-														<th class="cell">Total Return %</th>
+														<th class="cell" data-col="0">Ticker <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="1">Currency <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="2">Price <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="3">Quantity <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="4">Value ({{ base_currency }}) <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="5">Total Return ({{ base_currency }}) $ <span class="sort-icon">↕</span></th>
+														<th class="cell" data-col="6">Total Return % <span class="sort-icon">↕</span></th>
 														<th class="cell"></th>
 													</tr>
 												</thead>
@@ -396,7 +397,7 @@
 													<td class="cell">{{ asset.ticker or "N/A" }}</td>
 													<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
 														{% if asset.current_share_price is defined and asset.current_share_price is not none %}
 														{{ "{:,.2f}".format(asset.current_share_price) }} {{ asset.currency }}
 														{% else %}
@@ -404,7 +405,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.current_holdings or 0 }}">
 														{% if asset.current_holdings is defined and asset.current_holdings is not none %}
 														{{ "{:,.2f}".format(asset.current_holdings) }}
 														{% else %}
@@ -412,7 +413,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.current_value_base_currency or 0 }}">
 														{% if asset.current_value_base_currency is defined and asset.current_value_base_currency is not none %}
 														{{ "{:,.2f}".format(asset.current_value_base_currency) }}
 														{% else %}
@@ -420,7 +421,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.total_return_dollar_base_currency }}">
 														{% if asset.total_return_dollar_base_currency is defined and asset.total_return_dollar_base_currency is not none %}
 														<span class="{{ 'text-success' if asset.total_return_dollar_base_currency >= 0 else 'text-danger' }}">
 															{{ "{:,.2f}".format(asset.total_return_dollar_base_currency) }}
@@ -430,7 +431,7 @@
 														{% endif %}
 													</td>
 
-													<td class="cell">
+													<td class="cell" data-val="{{ asset.total_return_pct_base_currency }}">
 														{% if asset.total_return_pct_base_currency is defined and asset.total_return_pct_base_currency is not none %}
 														<span class="{{ 'text-success' if asset.total_return_pct_base_currency >= 0 else 'text-danger' }}">
 															{{ "{:,.2f}".format(asset.total_return_pct_base_currency * 100) }}%
@@ -494,58 +495,59 @@
 								{% endfor %}
 							</div>
 							{% for currency in currencies if portfolio_total_contribution_asset_currencies[currency] > 0 %}
+							{% set curr_code = exchange_currencies.get(currency, currency) %}
 							<div class="subtab-content" id="currency-tab-{{ currency }}">
 								<!-- <p>Showing all <strong>{{ currency }}</strong> assets.</p> -->
 								<nav class="position-table-tab-asset-currency app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4" role="tablist">
 									<a class="flex-sm-fill text-sm-center nav-link active" 
-									id="current-positions-asset-currency-tab"
+									id="current-positions-{{ currency }}-tab"
 									data-bs-toggle="tab"
-									href="#current-positions-asset-currency"
+									href="#current-positions-{{ currency }}"
 									role="tab"
-									aria-controls="current-positions-asset-currency"
+									aria-controls="current-positions-{{ currency }}"
 									aria-selected="true">Current Positions</a>
 
 									<a class="flex-sm-fill text-sm-center nav-link" 
-									id="closed-positions-asset-currency-tab"
+									id="closed-positions-{{ currency }}-tab"
 									data-bs-toggle="tab"
-									href="#closed-positions-asset-currency"
+									href="#closed-positions-{{ currency }}"
 									role="tab"
-									aria-controls="closed-positions-asset-currency"
+									aria-controls="closed-positions-{{ currency }}"
 									aria-selected="false">Closed Positions</a>
 
 									<a class="flex-sm-fill text-sm-center nav-link" 
-									id="all-positions-asset-currency-tab"
+									id="all-positions-{{ currency }}-tab"
 									data-bs-toggle="tab"
-									href="#all-positions-asset-currency"
+									href="#all-positions-{{ currency }}"
 									role="tab"
-									aria-controls="all-positions-asset-currency"
+									aria-controls="all-positions-{{ currency }}"
 									aria-selected="false">All Positions</a>
 								</nav>
 
-								<div class="tab-content" id="position-table-tab-asset-currency-content">
-									<div class="tab-pane fade show active" id="current-positions-asset-currency" role="tabpanel" aria-labelledby="current-positions-asset-currency-tab">
+								<div class="tab-content" id="position-table-tab-{{ currency }}-content">
+									<div class="tab-pane fade show active" id="current-positions-{{ currency }}" role="tabpanel" aria-labelledby="current-positions-{{ currency }}-tab">
 										<div class="app-card-body">
 											<div class="table-responsive">
-												<table class="table app-table-hover mb-0 text-left">
+												<table class="table app-table-hover mb-0 text-left sortable-table">
 													<thead>
 														<tr>
-															<th class="cell">Ticker</th>
-															<th class="cell">Currency</th>
-															<th class="cell">Price</th>
-															<th class="cell">Quantity</th>
-															<th class="cell">Value ({{ currency }})</th>
-															<th class="cell">Total Return ({{ currency }})$</th>
-															<th class="cell">Total Return %</th>
+															<th class="cell" data-col="0">Ticker <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="1">Currency <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="2">Price <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="3">Quantity <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="4">Value ({{ curr_code }}) <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="5">Total Return ({{ curr_code }}) $ <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="6">Total Return % <span class="sort-icon">↕</span></th>
 															<th class="cell"></th>
 														</tr>
 													</thead>
 													<tbody>
-													{% for asset in assets if asset.current_holdings != 0 and asset.currency == currency %}
+													{% for asset in assets if asset.current_holdings != 0 and asset.exchange == currency %}
 														<tr>
 														<td class="cell">{{ asset.ticker or "N/A" }}</td>
 														<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
 															{% if asset.current_share_price is defined and asset.current_share_price is not none %}
 															{{ "{:,.2f}".format(asset.current_share_price) }} {{ asset.currency }}
 															{% else %}
@@ -553,7 +555,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.current_holdings or 0 }}">
 															{% if asset.current_holdings is defined and asset.current_holdings is not none %}
 															{{ "{:,.2f}".format(asset.current_holdings) }}
 															{% else %}
@@ -561,7 +563,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.current_value_asset_currency or 0 }}">
 															{% if asset.current_value_asset_currency is defined and asset.current_value_asset_currency is not none %}
 															{{ "{:,.2f}".format(asset.current_value_asset_currency) }} 
 															{% else %}
@@ -569,7 +571,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.total_return_dollar_asset_currency }}">
 															{% if asset.total_return_dollar_asset_currency is defined and asset.total_return_dollar_asset_currency is not none %}
 															<span class="{{ 'text-success' if asset.total_return_dollar_asset_currency >= 0 else 'text-danger' }}">
 																{{ "{:,.2f}".format(asset.total_return_dollar_asset_currency) }}
@@ -579,7 +581,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.total_return_pct_asset_currency }}">
 															{% if asset.total_return_pct_asset_currency is defined and asset.total_return_pct_asset_currency is not none %}
 															<span class="{{ 'text-success' if asset.total_return_pct_asset_currency >= 0 else 'text-danger' }}">
 																{{ "{:,.2f}".format(asset.total_return_pct_asset_currency * 100) }}%
@@ -601,29 +603,29 @@
 										</div><!--//app-card-body-->		
 									</div>
 
-									<div class="tab-pane fade" id="closed-positions-asset-currency" role="tabpanel" aria-labelledby="closed-positions-asset-currency-tab">
+									<div class="tab-pane fade" id="closed-positions-{{ currency }}" role="tabpanel" aria-labelledby="closed-positions-{{ currency }}-tab">
 										<div class="app-card-body">
 											<div class="table-responsive">
-												<table class="table app-table-hover mb-0 text-left">
+												<table class="table app-table-hover mb-0 text-left sortable-table">
 													<thead>
 														<tr>
-															<th class="cell">Ticker</th>
-															<th class="cell">Currency</th>
-															<th class="cell">Price</th>
-															<th class="cell">Quantity</th>
-															<th class="cell">Value ({{ currency }})</th>
-															<th class="cell">Total Return ({{ currency }}) $</th>
-															<th class="cell">Total Return %</th>
+															<th class="cell" data-col="0">Ticker <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="1">Currency <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="2">Price <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="3">Quantity <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="4">Value ({{ curr_code }}) <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="5">Total Return ({{ curr_code }}) $ <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="6">Total Return % <span class="sort-icon">↕</span></th>
 															<th class="cell"></th>
 														</tr>
 													</thead>
 													<tbody>
-													{% for asset in assets if (asset.current_holdings == 0 and asset.currency == currency) %}
+													{% for asset in assets if (asset.current_holdings == 0 and asset.exchange == currency) %}
 														<tr>
 														<td class="cell">{{ asset.ticker or "N/A" }}</td>
 														<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
 															{% if asset.current_share_price is defined and asset.current_share_price is not none %}
 															{{ "{:,.2f}".format(asset.current_share_price) }} {{ asset.currency }} 
 															{% else %}
@@ -631,7 +633,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.current_holdings or 0 }}">
 															{% if asset.current_holdings is defined and asset.current_holdings is not none %}
 															{{ "{:,.2f}".format(asset.current_holdings) }}
 															{% else %}
@@ -639,7 +641,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.current_value_asset_currency or 0 }}">
 															{% if asset.current_value_asset_currency is defined and asset.current_value_asset_currency is not none %}
 															{{ "{:,.2f}".format(asset.current_value_asset_currency) }}
 															{% else %}
@@ -647,7 +649,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.total_return_dollar_asset_currency }}">
 															{% if asset.total_return_dollar_asset_currency is defined and asset.total_return_dollar_asset_currency is not none %}
 															<span class="{{ 'text-success' if asset.total_return_dollar_asset_currency >= 0 else 'text-danger' }}">
 																{{ "{:,.2f}".format(asset.total_return_dollar_asset_currency) }}
@@ -657,7 +659,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.total_return_pct_asset_currency }}">
 															{% if asset.total_return_pct_asset_currency is defined and asset.total_return_pct_asset_currency is not none %}
 															<span class="{{ 'text-success' if asset.total_return_pct_asset_currency >= 0 else 'text-danger' }}">
 																{{ "{:,.2f}".format(asset.total_return_pct_asset_currency * 100) }}%
@@ -679,29 +681,29 @@
 										</div><!--//app-card-body-->	
 									</div>
 
-									<div class="tab-pane fade" id="all-positions-asset-currency" role="tabpanel" aria-labelledby="all-positions-asset-currency-tab">
+									<div class="tab-pane fade" id="all-positions-{{ currency }}" role="tabpanel" aria-labelledby="all-positions-{{ currency }}-tab">
 										<div class="app-card-body">
 											<div class="table-responsive">
-												<table class="table app-table-hover mb-0 text-left">
+												<table class="table app-table-hover mb-0 text-left sortable-table">
 													<thead>
 														<tr>
-															<th class="cell">Ticker</th>
-															<th class="cell">Currency</th>
-															<th class="cell">Price</th>
-															<th class="cell">Quantity</th>
-															<th class="cell">Value ({{ currency }})</th>
-															<th class="cell">Total Return ({{ currency }}) $</th>
-															<th class="cell">Total Return %</th>
+															<th class="cell" data-col="0">Ticker <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="1">Currency <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="2">Price <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="3">Quantity <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="4">Value ({{ curr_code }}) <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="5">Total Return ({{ curr_code }}) $ <span class="sort-icon">↕</span></th>
+															<th class="cell" data-col="6">Total Return % <span class="sort-icon">↕</span></th>
 															<th class="cell"></th>
 														</tr>
 													</thead>
 													<tbody>
-													{% for asset in assets if asset.currency == currency %}
+													{% for asset in assets if asset.exchange == currency %}
 														<tr>
 														<td class="cell">{{ asset.ticker or "N/A" }}</td>
 														<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
 															{% if asset.current_share_price is defined and asset.current_share_price is not none %}
 															{{ "{:,.2f}".format(asset.current_share_price) }} {{ asset.currency }}
 															{% else %}
@@ -709,7 +711,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.current_holdings or 0 }}">
 															{% if asset.current_holdings is defined and asset.current_holdings is not none %}
 															{{ "{:,.2f}".format(asset.current_holdings) }}
 															{% else %}
@@ -717,7 +719,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.current_value_asset_currency or 0 }}">
 															{% if asset.current_value_asset_currency is defined and asset.current_value_asset_currency is not none %}
 															{{ "{:,.2f}".format(asset.current_value_asset_currency) }}
 															{% else %}
@@ -725,7 +727,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.total_return_dollar_asset_currency }}">
 															{% if asset.total_return_dollar_asset_currency is defined and asset.total_return_dollar_asset_currency is not none %}
 															<span class="{{ 'text-success' if asset.total_return_dollar_asset_currency >= 0 else 'text-danger' }}">
 																{{ "{:,.2f}".format(asset.total_return_dollar_asset_currency) }}
@@ -735,7 +737,7 @@
 															{% endif %}
 														</td>
 
-														<td class="cell">
+														<td class="cell" data-val="{{ asset.total_return_pct_asset_currency }}">
 															{% if asset.total_return_pct_asset_currency is defined and asset.total_return_pct_asset_currency is not none %}
 															<span class="{{ 'text-success' if asset.total_return_pct_asset_currency >= 0 else 'text-danger' }}">
 																{{ "{:,.2f}".format(asset.total_return_pct_asset_currency * 100) }}%
@@ -811,7 +813,7 @@
 	    <footer class="app-footer">
 		    <div class="container text-center py-3">
 		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small>
+            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
 		       
 		    </div>
 	    </footer><!--//app-footer-->
@@ -831,6 +833,40 @@
 	<script src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
 
 	{% include "loading.html" %}
+
+	<style>
+		th[data-col] { cursor: pointer; user-select: none; white-space: nowrap; }
+		th[data-col]:hover { background: rgba(0,183,100,0.06); }
+		.sort-icon { opacity: 0.35; font-size: 0.75em; margin-left: 3px; }
+		th[data-col].sort-asc .sort-icon,
+		th[data-col].sort-desc .sort-icon { opacity: 1; color: #00b764; }
+	</style>
+	<script>
+		document.querySelectorAll('table.sortable-table').forEach(function(table) {
+			table.querySelectorAll('thead th[data-col]').forEach(function(th) {
+				th.addEventListener('click', function() {
+					var col = parseInt(th.dataset.col);
+					var asc = !th.classList.contains('sort-asc');
+					table.querySelectorAll('thead th[data-col]').forEach(function(t) {
+						t.classList.remove('sort-asc', 'sort-desc');
+						t.querySelector('.sort-icon').textContent = '↕';
+					});
+					th.classList.add(asc ? 'sort-asc' : 'sort-desc');
+					th.querySelector('.sort-icon').textContent = asc ? '↑' : '↓';
+					var tbody = table.querySelector('tbody');
+					var rows = Array.from(tbody.querySelectorAll('tr'));
+					rows.sort(function(a, b) {
+						var av = a.cells[col].dataset.val !== undefined ? a.cells[col].dataset.val : a.cells[col].textContent.trim();
+						var bv = b.cells[col].dataset.val !== undefined ? b.cells[col].dataset.val : b.cells[col].textContent.trim();
+						var an = parseFloat(av), bn = parseFloat(bv);
+						if (!isNaN(an) && !isNaN(bn)) return asc ? an - bn : bn - an;
+						return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+					});
+					rows.forEach(function(r) { tbody.appendChild(r); });
+				});
+			});
+		});
+	</script>
 
 </body>
 </html> 
