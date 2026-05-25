@@ -435,7 +435,7 @@ def _make_asset_dto(
         ticker=base_asset.ticker,
         exchange=base_asset.exchange,
         currency=orig_asset.currency,
-        name=base_asset.name,
+        name=base_asset.name or base_asset.ticker,
         current_holdings=0.0 if abs(base_asset.holdings) < 1e-9 else base_asset.holdings,
         current_share_price=round(float(orig_asset.daily_performance_df["close"].iloc[-1]), 2),
         # base currency fields

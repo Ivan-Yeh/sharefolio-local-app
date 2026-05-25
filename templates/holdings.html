@@ -238,7 +238,10 @@
 												<tbody>
 												{% for asset in assets if asset.current_holdings != 0 %}
 													<tr>
-													<td class="cell">{{ asset.ticker or "N/A" }}</td>
+													<td class="cell">
+												<span class="fw-semibold">{{ asset.ticker or "N/A" }}</span>
+												{% if asset.name %}<br><small class="text-muted">{{ asset.name }}</small>{% endif %}
+											</td>
 													<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
 													<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
@@ -316,7 +319,10 @@
 												<tbody>
 												{% for asset in assets if asset.current_holdings == 0 %}
 													<tr>
-													<td class="cell">{{ asset.ticker or "N/A" }}</td>
+													<td class="cell">
+												<span class="fw-semibold">{{ asset.ticker or "N/A" }}</span>
+												{% if asset.name %}<br><small class="text-muted">{{ asset.name }}</small>{% endif %}
+											</td>
 													<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
 													<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
@@ -394,7 +400,10 @@
 												<tbody>
 												{% for asset in assets %}
 													<tr>
-													<td class="cell">{{ asset.ticker or "N/A" }}</td>
+													<td class="cell">
+												<span class="fw-semibold">{{ asset.ticker or "N/A" }}</span>
+												{% if asset.name %}<br><small class="text-muted">{{ asset.name }}</small>{% endif %}
+											</td>
 													<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
 													<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
@@ -544,7 +553,10 @@
 													<tbody>
 													{% for asset in assets if asset.current_holdings != 0 and asset.exchange == currency %}
 														<tr>
-														<td class="cell">{{ asset.ticker or "N/A" }}</td>
+														<td class="cell">
+												<span class="fw-semibold">{{ asset.ticker or "N/A" }}</span>
+												{% if asset.name %}<br><small class="text-muted">{{ asset.name }}</small>{% endif %}
+											</td>
 														<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
 														<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
@@ -622,7 +634,10 @@
 													<tbody>
 													{% for asset in assets if (asset.current_holdings == 0 and asset.exchange == currency) %}
 														<tr>
-														<td class="cell">{{ asset.ticker or "N/A" }}</td>
+														<td class="cell">
+												<span class="fw-semibold">{{ asset.ticker or "N/A" }}</span>
+												{% if asset.name %}<br><small class="text-muted">{{ asset.name }}</small>{% endif %}
+											</td>
 														<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
 														<td class="cell" data-val="{{ asset.current_share_price or 0 }}">
@@ -700,7 +715,10 @@
 													<tbody>
 													{% for asset in assets if asset.exchange == currency %}
 														<tr>
-														<td class="cell">{{ asset.ticker or "N/A" }}</td>
+														<td class="cell">
+												<span class="fw-semibold">{{ asset.ticker or "N/A" }}</span>
+												{% if asset.name %}<br><small class="text-muted">{{ asset.name }}</small>{% endif %}
+											</td>
 														<td class="cell">{{ asset.currency or "N/A" }} {{ currency_icon[asset.currency] }}</td>
 
 														<td class="cell" data-val="{{ asset.current_share_price or 0 }}">

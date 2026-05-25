@@ -184,6 +184,7 @@
 				<a class="btn app-btn-secondary loading" href="/holdings"><i class="fa fa-arrow-left" aria-hidden="true"></i> All Holdings</a>
 				<div><br></div>
 				<h1 class="app-page-title">Performance Report: {{ ticker }} {{ currency_icon }}</h1>
+				{% if asset.name %}<p class="text-muted mb-2" style="margin-top:-0.5rem;">{{ asset.name }}</p>{% endif %}
 				<div class="tab-container">
 					<div class="tab-buttons">
 						{% if asset.currency != base_currency %}

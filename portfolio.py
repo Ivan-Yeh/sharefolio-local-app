@@ -202,7 +202,7 @@ class Portfolio:
 
             return full_symbol, Asset(ticker=ticker,
                                       exchange=exchange,
-                                      name="",
+                                      name=asset_name,
                                       currency=asset_trades["currency"].iloc[0],
                                       trades=asset_trades,
                                       dividends=asset_dividends,
@@ -261,7 +261,7 @@ class Portfolio:
 
             return full_symbol, Asset(ticker=ticker,
                                       exchange=exchange,
-                                      name="",
+                                      name=asset_name,
                                       currency=currency,
                                       trades=asset_trades,
                                       dividends=asset_dividends,
@@ -270,7 +270,7 @@ class Portfolio:
 
         max_workers = os.cpu_count() - 1
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            futures = [executor.submit(build_asset, full_symbol, yf_symbol) 
+            futures = [executor.submit(build_asset, full_symbol, yf_symbol)
                        for full_symbol, yf_symbol in symbol_pairs]
             for future in tqdm(as_completed(futures), 
                                desc="Loading assets (base currency)", 
