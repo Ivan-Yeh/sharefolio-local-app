@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ html_lang }}">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="Sharefolio — personal investment tracker" />
-    <title>Sharefolio — Investment Tracker</title>
+    <title>{{ t('index.title') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
     <style>
@@ -158,33 +158,31 @@
                 <a href="#" class="badge-award text-decoration-none"
                    onclick="event.preventDefault(); window.open('https://ivan-yeh.github.io/sharefolio.html', '_blank');">
                     <i class="bi bi-trophy-fill"></i>
-                    Best Undergraduate Junior Project 2023 · Citadel Securities
+                    {{ t('index.badge_award') }}
                 </a>
                 <h1 class="hero-title mb-3">
-                    Your investments,<br><span>clearly tracked.</span>
+                    {{ t('index.hero_title_1') }}<br><span>{{ t('index.hero_title_2') }}</span>
                 </h1>
                 <p class="hero-sub mb-5">
-                    Sharefolio is an investment portfolio tracker that automatically fetches
-                    price &amp; FX data, calculates FIFO returns, and gives you full insight
-                    across multiple exchanges and currencies.
+                    {{ t('index.hero_sub') | safe }}
                 </p>
                 <a href="#" class="btn-enter" data-nav="{{ url_for('portfolio') }}"
                    onclick="event.preventDefault(); if(typeof showLoading==='function') showLoading(); window.location.href=this.dataset.nav;">
-                    Open Portfolio &rarr;
+                    {{ t('index.open_portfolio') }} &rarr;
                 </a>
             </div>
             <div class="col-lg-6 d-none d-lg-flex justify-content-center">
                 <!-- Illustrative mini stats panel -->
                 <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:32px 40px;min-width:320px;">
-                    <div style="color:rgba(255,255,255,0.5);font-size:0.8rem;margin-bottom:6px;">Total Portfolio Value</div>
+                    <div style="color:rgba(255,255,255,0.5);font-size:0.8rem;margin-bottom:6px;">{{ t('index.demo_total_value') }}</div>
                     <div id="demo-portfolio-value" style="font-size:2rem;font-weight:800;color:#fff;margin-bottom:20px;">$0.00</div>
                     <div class="d-flex gap-3">
                         <div style="flex:1;background:rgba(0,183,100,0.12);border-radius:12px;padding:14px 16px;">
-                            <div style="color:rgba(255,255,255,0.45);font-size:0.75rem;">Total Return</div>
+                            <div style="color:rgba(255,255,255,0.45);font-size:0.75rem;">{{ t('index.demo_total_return') }}</div>
                             <div id="demo-total-return" style="color:#6effc0;font-weight:700;font-size:1.05rem;">+0.0%</div>
                         </div>
                         <div style="flex:1;background:rgba(0,183,100,0.12);border-radius:12px;padding:14px 16px;">
-                            <div style="color:rgba(255,255,255,0.45);font-size:0.75rem;">Dividends</div>
+                            <div style="color:rgba(255,255,255,0.45);font-size:0.75rem;">{{ t('index.demo_dividends') }}</div>
                             <div id="demo-dividends" style="color:#6effc0;font-weight:700;font-size:1.05rem;">+0.0%</div>
                         </div>
                     </div>
@@ -198,36 +196,36 @@
 <section class="features">
     <div class="container px-4 px-md-5">
         <div class="text-center mb-5">
-            <h2 class="fw-bolder fs-2">Everything you need to understand your portfolio</h2>
-            <p class="text-muted">No spreadsheets. No manual conversions. Just clear numbers.</p>
+            <h2 class="fw-bolder fs-2">{{ t('index.features_title') }}</h2>
+            <p class="text-muted">{{ t('index.features_sub') }}</p>
         </div>
         <div class="row g-4">
             <div class="col-md-6 col-xl-3">
                 <div class="feature-card">
                     <div class="feature-icon"><i class="bi bi-globe2"></i></div>
-                    <h5>Multi-Exchange</h5>
-                    <p>Track securities on ASX, NYSE/NASDAQ, TSX, TWSE and OTC Taiwan — all in one place.</p>
+                    <h5>{{ t('index.feature1_title') }}</h5>
+                    <p>{{ t('index.feature1_body') }}</p>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3">
                 <div class="feature-card">
                     <div class="feature-icon"><i class="bi bi-currency-exchange"></i></div>
-                    <h5>Auto FX Conversion</h5>
-                    <p>Historical FX rates are fetched automatically. Switch between base and asset currencies at any time.</p>
+                    <h5>{{ t('index.feature2_title') }}</h5>
+                    <p>{{ t('index.feature2_body') }}</p>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3">
                 <div class="feature-card">
                     <div class="feature-icon"><i class="bi bi-bar-chart-steps"></i></div>
-                    <h5>FIFO Cost Basis</h5>
-                    <p>Accurate lot-by-lot FIFO accounting for realised and unrealised P&amp;L. Handles splits and DRP trades.</p>
+                    <h5>{{ t('index.feature3_title') }}</h5>
+                    <p>{{ t('index.feature3_body') | safe }}</p>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3">
                 <div class="feature-card">
                     <div class="feature-icon"><i class="bi bi-pie-chart-fill"></i></div>
-                    <h5>Rich Analytics</h5>
-                    <p>Monthly, quarterly and annual performance charts. Allocation pie. Full holding-level drill-down.</p>
+                    <h5>{{ t('index.feature4_title') }}</h5>
+                    <p>{{ t('index.feature4_body') }}</p>
                 </div>
             </div>
         </div>
@@ -239,33 +237,31 @@
     <div class="container px-4 px-md-5">
         <div class="row gy-5 align-items-center">
             <div class="col-lg-5">
-                <h2 class="fw-bolder fs-2 mb-3">How it works</h2>
+                <h2 class="fw-bolder fs-2 mb-3">{{ t('index.workflow_title') }}</h2>
                 <p class="text-muted mb-0">
-                    Sharefolio reads your trade and income records and does all
-                    the heavy lifting — price fetching, FX conversion, FIFO
-                    accounting and return calculation — automatically.
+                    {{ t('index.workflow_sub') }}
                 </p>
             </div>
             <div class="col-lg-6 offset-lg-1">
                 <div class="step">
                     <div class="step-number">1</div>
                     <div class="step-body">
-                        <h6>Record your trades</h6>
-                        <p>Enter each buy, sell or adjustment on the Trades page. Upload a CSV if you have existing records.</p>
+                        <h6>{{ t('index.step1_title') }}</h6>
+                        <p>{{ t('index.step1_body') }}</p>
                     </div>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
                     <div class="step-body">
-                        <h6>Record dividends &amp; income</h6>
-                        <p>Log dividends, distributions and tax credits. DRP? Add the reinvestment trade in the same form.</p>
+                        <h6>{{ t('index.step2_title') | safe }}</h6>
+                        <p>{{ t('index.step2_body') }}</p>
                     </div>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
                     <div class="step-body">
-                        <h6>Open your Portfolio</h6>
-                        <p>Prices and FX rates are fetched automatically. Your full performance history is ready instantly.</p>
+                        <h6>{{ t('index.step3_title') }}</h6>
+                        <p>{{ t('index.step3_body') }}</p>
                     </div>
                 </div>
             </div>
@@ -278,15 +274,15 @@
     <div class="container px-4 px-md-5">
         <div class="quote-card mx-auto" style="max-width: 760px;">
             <blockquote class="mb-3">
-                "Sharefolio Analyser ASX won the Best Undergraduate Junior Project Award 2023"
+                {{ t('index.quote') }}
             </blockquote>
             <div class="d-flex align-items-center gap-3">
                 <div>
-                    <div class="fw-bold">Citadel Securities, Australia</div>
+                    <div class="fw-bold">{{ t('index.quote_org') }}</div>
                     <div class="text-muted small">
-                        Developed by <a href="#" onclick="event.preventDefault(); window.open('https://www.linkedin.com/in/ivan-yeh-58367122b/', '_blank');">Ivan Yeh</a>
+                        {{ t('index.quote_developed_by') }} <a href="#" onclick="event.preventDefault(); window.open('https://www.linkedin.com/in/ivan-yeh-58367122b/', '_blank');">Ivan Yeh</a>
                         &nbsp;·&nbsp;
-                        <a href="#" onclick="event.preventDefault(); window.open('https://ivan-yeh.github.io/sharefolio.html', '_blank');">Project details</a>
+                        <a href="#" onclick="event.preventDefault(); window.open('https://ivan-yeh.github.io/sharefolio.html', '_blank');">{{ t('index.quote_project_details') }}</a>
                     </div>
                 </div>
             </div>
@@ -297,9 +293,9 @@
 <!-- ── Footer ───────────────────────────────────────────────────────────── -->
 <footer class="site-footer mt-auto">
     <div class="container px-4">
-        Copyright &copy; Sharefolio {{ year }}
+        {{ t('index.footer_copyright', year=year) | safe }}
         &nbsp;·&nbsp;
-        <a href="{{ url_for('info') }}">FAQ &amp; Help</a>
+        <a href="{{ url_for('info') }}">{{ t('index.footer_faq') }}</a>
         <br><small style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
     </div>
 </footer>

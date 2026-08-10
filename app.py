@@ -17,6 +17,7 @@ import db
 import price_cache as _price_cache
 from asset import Asset
 from configs import SUPPORTED_CURRENCIES, SUPPORTED_EXCHANGES
+from i18n import LANGUAGE_NAMES, SUPPORTED_LANGUAGES, t as _t
 from paths import APP_DATA_DIR
 from portfolio import Portfolio
 
@@ -68,6 +69,19 @@ def _detect_default_currency() -> str:
 _DEFAULT_BASE_CURRENCY: str = _detect_default_currency()
 
 
+def _detect_default_language() -> str:
+    try:
+        loc = (_locale.getdefaultlocale()[0] or "").upper()
+        if "ZH_TW" in loc or "ZH_HANT" in loc or "ZH_HK" in loc:
+            return "zh_Hant"
+    except Exception:
+        pass
+    return "en"
+
+
+_DEFAULT_LANGUAGE: str = _detect_default_language()
+
+
 def _load_config() -> dict:
     if CONFIG_FILE.exists():
         with CONFIG_FILE.open() as f:
@@ -83,6 +97,9 @@ def _save_config(cfg: dict) -> None:
 
 _config: dict = _load_config()
 BASE_CURRENCY: str = _config.get("base_currency", _DEFAULT_BASE_CURRENCY)
+LANGUAGE: str = _config.get("language", _DEFAULT_LANGUAGE)
+if LANGUAGE not in SUPPORTED_LANGUAGES:
+    LANGUAGE = "en"
 
 CURRENCY_ICONS: dict[str, str] = {
     "AUD": "🇦🇺",
@@ -129,6 +146,18 @@ else:
     app = Flask(__name__)
 
 app.secret_key = "sharefolio-local-secret"
+
+
+@app.context_processor
+def _inject_i18n():
+    html_lang = "zh-Hant" if LANGUAGE == "zh_Hant" else "en"
+    return {
+        "t": lambda key, **kw: _t(key, LANGUAGE, **kw),
+        "language": LANGUAGE,
+        "html_lang": html_lang,
+        "supported_languages": SUPPORTED_LANGUAGES,
+        "language_names": LANGUAGE_NAMES,
+    }
 
 # Injected into every HTML response at document-start so it runs before any
 # page script — the only reliable way to intercept window.open in pywebview.
@@ -1060,17 +1089,29 @@ def info():
 
 @app.route("/settings", methods=["GET", "POST"])
 def settings():
-    global _config, BASE_CURRENCY
+    global _config, BASE_CURRENCY, LANGUAGE
     if request.method == "POST":
-        new_currency = request.form.get("base_currency", "").strip()
-        if new_currency in SUPPORTED_CURRENCIES:
-            BASE_CURRENCY = new_currency
-            _config["base_currency"] = new_currency
-            _save_config(_config)
-            _async_reload()
-            flash(f"Base currency changed to {new_currency}. Portfolio reloaded.")
+        form_name = request.form.get("form_name", "base_currency")
+        if form_name == "language":
+            new_language = request.form.get("language", "").strip()
+            if new_language in SUPPORTED_LANGUAGES:
+                LANGUAGE = new_language
+                _config["language"] = new_language
+                _save_config(_config)
+                flash(_t("settings.flash_language_changed", new_language,
+                         language=LANGUAGE_NAMES[new_language]))
+            else:
+                flash(_t("settings.flash_language_invalid", LANGUAGE))
         else:
-            flash("Invalid currency selected.")
+            new_currency = request.form.get("base_currency", "").strip()
+            if new_currency in SUPPORTED_CURRENCIES:
+                BASE_CURRENCY = new_currency
+                _config["base_currency"] = new_currency
+                _save_config(_config)
+                _async_reload()
+                flash(_t("settings.flash_currency_changed", LANGUAGE, currency=new_currency))
+            else:
+                flash(_t("settings.flash_currency_invalid", LANGUAGE))
         return redirect(url_for("settings"))
     return render_template(
         "settings.html",

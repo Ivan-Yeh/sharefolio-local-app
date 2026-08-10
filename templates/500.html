@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="{{ html_lang }}"> 
 <head>
-    <title>Sharefolio - Error</title>
+    <title>Sharefolio - {{ t('500.title') }}</title>
     
     <!-- Meta -->
     <meta charset="utf-8">
@@ -25,101 +25,7 @@
 </head> 
 
 <body class="app">   	
-    <header class="app-header fixed-top">	   	            
-        <div class="app-header-inner">  
-	        <div class="container-fluid py-2">
-		        <div class="app-header-content"> 
-				    <div class="col-auto">
-					    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
-						    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img"><title>Menu</title><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-					    </a>
-				    </div>
-		        </div><!--//row-->
-	            </div><!--//app-header-content-->
-	        </div><!--//container-fluid-->
-        </div><!--//app-header-inner-->
-        <div id="app-sidepanel" class="app-sidepanel"> 
-	        <div id="sidepanel-drop" class="sidepanel-drop"></div>
-	        <div class="sidepanel-inner d-flex flex-column">
-		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
-		        <div class="app-branding">
-		            <a class="app-logo loading" href="/portfolio"><span class="logo-text">Sharefolio</span></a>
-		        </div><!--//app-branding-->  
-		        
-			    <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
-				    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
-					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link loading" href="{{ url_for('portfolio') }}">
-						        <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span>
-		                        <span class="nav-link-text">Portfolio</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
-					    
-					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link loading" href="{{ url_for('holdings') }}">
-								<span class="nav-icon" href><i class="fa-solid fa-hand-holding-dollar"></i></span>
-		                         <span class="nav-link-text">Holdings</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
-						<li class="nav-item has-submenu">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
-						        <span class="nav-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
-		                         <span class="nav-link-text">Transactions</span>
-		                         <span class="submenu-arrow">
-		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-	</svg>
-	                             </span><!--//submenu-arrow-->
-					        </a><!--//nav-link-->
-					        <div id="submenu-1" class="show submenu submenu-1" data-bs-parent="#menu-accordion">
-						        <ul class="submenu-list list-unstyled">
-							        <li class="submenu-item"><a class="submenu-link loading" href="{{ url_for('trades') }}">Trades</a></li>
-							        <li class="submenu-item"><a class="submenu-link loading" href="{{ url_for('incomes') }}">Incomes</a></li>
-						        </ul>
-					        </div>
-					    </li><!--//nav-item-->
-						
-						
-				    </ul><!--//app-menu-->
-			    </nav><!--//app-nav-->
-			    
-				<div class="app-sidepanel-footer">
-				    <nav class="app-nav app-nav-footer">
-					    <ul class="app-menu footer-menu list-unstyled">
-						    <li class="nav-item">
-						        <a class="nav-link" href="/info">
-							        <span class="nav-icon">
-										<i class="fa fa-info"></i>
-									</span>
-			                        <span class="nav-link-text">Information</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-						    <li class="nav-item">
-						        <a class="nav-link" href="/settings">
-							        <span class="nav-icon">
-										<i class="fa fa-cogs"></i>
-									</span>
-			                        <span class="nav-link-text">Settings</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-						    <li class="nav-item">
-						        <a class="nav-link" href="{{ url_for('index') }}">
-							        <span class="nav-icon">
-										<i class="fa fa-home"></i>
-									</span>
-			                        <span class="nav-link-text">Home</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-					    </ul><!--//footer-menu-->
-				    </nav>
-			    </div><!--//app-sidepanel-footer-->
-		       
-	        </div><!--//sidepanel-inner-->
-	    </div><!--//app-sidepanel-->
-    </header><!--//app-header-->
+    {% include "_header.html" %}
     
     <div class="app-wrapper">
 	    <div class="container-xl">
@@ -128,29 +34,23 @@
 					<i class="fa-solid fa-triangle-exclamation"></i>
 				</div>
 				<h1 style="font-size:5rem;font-weight:800;color:rgba(0,0,0,0.08);margin-bottom:-16px;">500</h1>
-				<h2 class="mb-3" style="font-weight:700;">Portfolio could not be loaded</h2>
+				<h2 class="mb-3" style="font-weight:700;">{{ t('500.title') }}</h2>
 				<p class="text-muted mb-4" style="max-width:480px;margin:0 auto 1.5rem;">
-					We couldn't analyse your portfolio right now. Make sure your
-					<a href="/trades">trades</a> and <a href="/incomes">income</a> records are valid and not empty.
+					{{ t('500.body_prefix') }}
+					<a href="/trades">{{ t('500.body_trades') }}</a> {{ t('500.body_and') }} <a href="/incomes">{{ t('500.body_incomes') }}</a> {{ t('500.body_suffix') }}
 				</p>
 				<div class="d-flex justify-content-center gap-3 flex-wrap">
 					<a href="{{ url_for('trades') }}" class="btn app-btn-primary">
-						<i class="fa-solid fa-money-bill-transfer me-2"></i> Check Trades
+						<i class="fa-solid fa-money-bill-transfer me-2"></i> {{ t('500.check_trades') }}
 					</a>
 					<a href="{{ url_for('info') }}" class="btn app-btn-secondary">
-						<i class="fa-solid fa-circle-info me-2"></i> Help &amp; FAQ
+						<i class="fa-solid fa-circle-info me-2"></i> {{ t('500.help') }}
 					</a>
 				</div>
 			</div>
 		</div>
 	    
-	    <footer class="app-footer">
-		    <div class="container text-center py-3">
-		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
-		       
-		    </div>
-	    </footer><!--//app-footer-->
+	    {% include "_footer.html" %}
 	    
     </div><!--//app-wrapper-->    					
 

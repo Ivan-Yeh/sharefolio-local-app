@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ html_lang }}">
 <head>
-    <title>Sharefolio — Loading prices…</title>
+    <title>{{ t('fetching.title') }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script defer src="{{ url_for('static', filename='assets/plugins/fontawesome/js/all.min.js') }}"></script>
@@ -70,8 +70,8 @@
 <body>
     <div class="fetching-wrap">
         <div class="fetch-spinner"></div>
-        <p class="fetch-title">Fetching latest prices<span class="fetch-dots"></span></p>
-        <p class="fetch-sub">Downloading historical price data from Yahoo Finance. This only happens on first launch — subsequent loads read from the local cache.</p>
+        <p class="fetch-title">{{ t('fetching.heading') }}<span class="fetch-dots"></span></p>
+        <p class="fetch-sub">{{ t('fetching.body') }}</p>
         <p class="fetch-status" id="fetch-status">&nbsp;</p>
     </div>
 
@@ -79,23 +79,29 @@
     (function () {
         var next = {{ next_url | tojson }};
         var statusEl = document.getElementById('fetch-status');
+        var STATUS = {
+            done: {{ t('fetching.status_done') | tojson }},
+            downloading: {{ t('fetching.status_downloading') | tojson }},
+            waitingStart: {{ t('fetching.status_waiting_start') | tojson }},
+            waitingServer: {{ t('fetching.status_waiting_server') | tojson }}
+        };
 
         function poll() {
             fetch('/api/cache-status')
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
                     if (data.ready) {
-                        statusEl.textContent = 'Done! Redirecting…';
+                        statusEl.textContent = STATUS.done;
                         window.location.href = next;
                         return;
                     }
                     statusEl.textContent = data.fetching
-                        ? 'Downloading from Yahoo Finance…'
-                        : 'Waiting for download to start…';
+                        ? STATUS.downloading
+                        : STATUS.waitingStart;
                     setTimeout(poll, 1500);
                 })
                 .catch(function () {
-                    statusEl.textContent = 'Waiting for server…';
+                    statusEl.textContent = STATUS.waitingServer;
                     setTimeout(poll, 2000);
                 });
         }

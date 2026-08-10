@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="{{ html_lang }}"> 
 <head>
-    <title>Sharefolio - Settings</title>
+    <title>Sharefolio - {{ t('settings.title') }}</title>
     
     <!-- Meta -->
     <meta charset="utf-8">
@@ -25,108 +25,15 @@
 </head> 
 
 <body class="app">   	
-    <header class="app-header fixed-top">	   	            
-        <div class="app-header-inner">  
-	        <div class="container-fluid py-2">
-		        <div class="app-header-content"> 
-				    <div class="col-auto">
-					    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
-						    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img"><title>Menu</title><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-					    </a>
-				    </div>
-		        </div><!--//row-->
-	            </div><!--//app-header-content-->
-	        </div><!--//container-fluid-->
-        </div><!--//app-header-inner-->
-        <div id="app-sidepanel" class="app-sidepanel"> 
-	        <div id="sidepanel-drop" class="sidepanel-drop"></div>
-	        <div class="sidepanel-inner d-flex flex-column">
-		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
-		        <div class="app-branding">
-		            <a class="app-logo loading" href="/portfolio"><span class="logo-text">Sharefolio</span></a>
-		        </div><!--//app-branding-->  
-		        
-			    <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
-				    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
-					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link loading" href="{{ url_for('portfolio') }}">
-						        <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span>
-		                        <span class="nav-link-text">Portfolio</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
-					    
-					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link loading" href="{{ url_for('holdings') }}">
-								<span class="nav-icon" href><i class="fa-solid fa-hand-holding-dollar"></i></span>
-		                         <span class="nav-link-text">Holdings</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
-						<li class="nav-item has-submenu">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
-						        <span class="nav-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
-		                         <span class="nav-link-text">Transactions</span>
-		                         <span class="submenu-arrow">
-		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-	</svg>
-	                             </span><!--//submenu-arrow-->
-					        </a><!--//nav-link-->
-					        <div id="submenu-1" class="show submenu submenu-1" data-bs-parent="#menu-accordion">
-						        <ul class="submenu-list list-unstyled">
-							        <li class="submenu-item"><a class="submenu-link loading" href="{{ url_for('trades') }}">Trades</a></li>
-							        <li class="submenu-item"><a class="submenu-link loading" href="{{ url_for('incomes') }}">Incomes</a></li>
-						        </ul>
-					        </div>
-					    </li><!--//nav-item-->
-						
-						
-				    </ul><!--//app-menu-->
-			    </nav><!--//app-nav-->
-			    
-				<div class="app-sidepanel-footer">
-				    <nav class="app-nav app-nav-footer">
-					    <ul class="app-menu footer-menu list-unstyled">
-						    <li class="nav-item">
-						        <a class="nav-link" href="/info">
-							        <span class="nav-icon">
-										<i class="fa fa-info"></i>
-									</span>
-			                        <span class="nav-link-text">Help &amp; FAQ</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-						    <li class="nav-item">
-						        <a class="nav-link active" href="/settings">
-							        <span class="nav-icon">
-										<i class="fa fa-cogs"></i>
-									</span>
-			                        <span class="nav-link-text">Settings</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-						    <li class="nav-item">
-						        <a class="nav-link" href="{{ url_for('index') }}">
-							        <span class="nav-icon">
-										<i class="fa fa-home"></i>
-									</span>
-			                        <span class="nav-link-text">Home</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-					    </ul><!--//footer-menu-->
-				    </nav>
-			    </div><!--//app-sidepanel-footer-->
-		       
-	        </div><!--//sidepanel-inner-->
-	    </div><!--//app-sidepanel-->
-    </header><!--//app-header-->
+    {% set active_page = 'settings' %}
+    {% include "_header.html" %}
     
     <div class="app-wrapper">
 		<div class="container-xl">		
 			<div>
 				<br>
 			</div>    
-			<h1 class="app-page-title">Settings</h1>
+			<h1 class="app-page-title">{{ t('settings.title') }}</h1>
 			{% with messages = get_flashed_messages(with_categories=true) %}
 			{% if messages %}
 			<div class="app-card-body p-4">
@@ -143,33 +50,34 @@
 			<hr class="mb-4">
 			<div class="row g-4 settings-section">
 				<div class="col-12 col-md-4">
-					<h3 class="section-title">Portfolio</h3>
-					<div class="section-intro">Select the currency all portfolio values are converted and displayed in. Changing this reloads the portfolio immediately.</div>
+					<h3 class="section-title">{{ t('settings.section_portfolio') }}</h3>
+					<div class="section-intro">{{ t('settings.section_portfolio_intro') }}</div>
 				</div>
 				<div class="col-12 col-md-8">
 					<div class="app-card app-card-settings shadow-sm p-4">
 						<div class="app-card-body">
 							<form method="POST" action="{{ url_for('settings') }}">
+								<input type="hidden" name="form_name" value="base_currency">
 								<div class="mb-3">
-									<label class="form-label">Base Currency</label>
+									<label class="form-label">{{ t('settings.base_currency') }}</label>
 									<select name="base_currency" class="form-select" style="max-width:200px;">
 										{% for c in supported_currencies %}
 										<option value="{{ c }}" {% if c == base_currency %}selected{% endif %}>{{ c }}</option>
 										{% endfor %}
 									</select>
-									<div class="form-text">All trade prices and portfolio values are converted to this currency using historical FX rates.</div>
+									<div class="form-text">{{ t('settings.base_currency_help') }}</div>
 								</div>
 								<div class="mb-3">
-									<label class="form-label">Data Directory</label>
+									<label class="form-label">{{ t('settings.data_directory') }}</label>
 									<div class="d-flex align-items-center gap-2" style="max-width:500px;">
 										<input type="text" class="form-control" value="{{ app_data_dir }}" readonly>
 										<a href="/open-data-folder" class="btn app-btn-secondary text-nowrap" onclick="fetch('/open-data-folder'); return false;">
-											<i class="fa fa-folder-open me-1"></i>Show in Finder
+											<i class="fa fa-folder-open me-1"></i>{{ t('settings.show_in_finder') }}
 										</a>
 									</div>
-									<div class="form-text">Trade and income CSV files are stored here and persist across app updates.</div>
+									<div class="form-text">{{ t('settings.data_directory_help') }}</div>
 								</div>
-								<button type="submit" class="btn app-btn-primary">Save &amp; Reload</button>
+								<button type="submit" class="btn app-btn-primary">{{ t('settings.save_reload') }}</button>
 							</form>
 						</div>
 					</div>
@@ -178,14 +86,40 @@
 			<hr class="my-4">
 			<div class="row g-4 settings-section">
 				<div class="col-12 col-md-4">
-					<h3 class="section-title">Supported Exchanges</h3>
-					<div class="section-intro">Exchanges recognised for automatic price data fetching via Yahoo Finance.</div>
+					<h3 class="section-title">{{ t('settings.section_language') }}</h3>
+					<div class="section-intro">{{ t('settings.section_language_intro') }}</div>
+				</div>
+				<div class="col-12 col-md-8">
+					<div class="app-card app-card-settings shadow-sm p-4">
+						<div class="app-card-body">
+							<form method="POST" action="{{ url_for('settings') }}">
+								<input type="hidden" name="form_name" value="language">
+								<div class="mb-3">
+									<label class="form-label">{{ t('settings.language') }}</label>
+									<select name="language" class="form-select" style="max-width:200px;">
+										{% for lang_code in supported_languages %}
+										<option value="{{ lang_code }}" {% if lang_code == language %}selected{% endif %}>{{ language_names[lang_code] }}</option>
+										{% endfor %}
+									</select>
+									<div class="form-text">{{ t('settings.language_help') }}</div>
+								</div>
+								<button type="submit" class="btn app-btn-primary">{{ t('settings.save') }}</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div><!--//row-->
+			<hr class="my-4">
+			<div class="row g-4 settings-section">
+				<div class="col-12 col-md-4">
+					<h3 class="section-title">{{ t('settings.section_exchanges') }}</h3>
+					<div class="section-intro">{{ t('settings.section_exchanges_intro') }}</div>
 				</div>
 				<div class="col-12 col-md-8">
 					<div class="app-card app-card-settings shadow-sm p-4">
 						<div class="app-card-body">
 							<table class="table mb-0">
-								<thead><tr><th>Code</th><th>Exchange</th><th>Currency</th></tr></thead>
+								<thead><tr><th>{{ t('settings.col_code') }}</th><th>{{ t('settings.col_exchange') }}</th><th>{{ t('settings.col_currency') }}</th></tr></thead>
 								<tbody>
 									<tr><td><code>US</code></td><td>NYSE / NASDAQ</td><td>USD 🇺🇸</td></tr>
 									<tr><td><code>AX</code></td><td>ASX (Australia)</td><td>AUD 🇦🇺</td></tr>
@@ -201,13 +135,7 @@
 			<hr class="my-4">
 		</div><!--//container-fluid-->
 	    
-	    <footer class="app-footer">
-		    <div class="container text-center py-3">
-		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
-		       
-		    </div>
-	    </footer><!--//app-footer-->
+	    {% include "_footer.html" %}
 	    
     </div><!--//app-wrapper-->    					
 

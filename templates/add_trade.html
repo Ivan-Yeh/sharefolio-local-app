@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="{{ html_lang }}"> 
 <head>
-    <title>Sharefolio - Enter Trade Details</title>
+    <title>Sharefolio - {{ t('add_trade.title') }}</title>
     
     <!-- Meta -->
     <meta charset="utf-8">
@@ -25,127 +25,34 @@
 </head> 
 
 <body class="app">   	
-    <header class="app-header fixed-top">	   	            
-        <div class="app-header-inner">  
-	        <div class="container-fluid py-2">
-		        <div class="app-header-content"> 
-				    <div class="col-auto">
-					    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
-						    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img"><title>Menu</title><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-					    </a>
-				    </div>
-		        </div><!--//row-->
-	            </div><!--//app-header-content-->
-	        </div><!--//container-fluid-->
-        </div><!--//app-header-inner-->
-        <div id="app-sidepanel" class="app-sidepanel"> 
-	        <div id="sidepanel-drop" class="sidepanel-drop"></div>
-	        <div class="sidepanel-inner d-flex flex-column">
-		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
-		        <div class="app-branding">
-		            <a class="app-logo loading" href="/portfolio"><span class="logo-text">Sharefolio</span></a>
-		        </div><!--//app-branding-->  
-		        
-			    <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
-				    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
-					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link loading" href="{{ url_for('portfolio') }}">
-						        <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span>
-		                        <span class="nav-link-text">Portfolio</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
-					    
-					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link loading" href="{{ url_for('holdings') }}">
-								<span class="nav-icon" href><i class="fa-solid fa-hand-holding-dollar"></i></span>
-		                         <span class="nav-link-text">Holdings</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
-						<li class="nav-item has-submenu">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
-						        <span class="nav-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
-		                         <span class="nav-link-text">Transactions</span>
-		                         <span class="submenu-arrow">
-		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-	</svg>
-	                             </span><!--//submenu-arrow-->
-					        </a><!--//nav-link-->
-					        <div id="submenu-1" class="show submenu submenu-1" data-bs-parent="#menu-accordion">
-						        <ul class="submenu-list list-unstyled">
-							        <li class="submenu-item"><a class="submenu-link active loading" href="{{ url_for('trades') }}">Trades</a></li>
-							        <li class="submenu-item"><a class="submenu-link loading" href="{{ url_for('incomes') }}">Incomes</a></li>
-						        </ul>
-					        </div>
-					    </li><!--//nav-item-->
-						
-						
-				    </ul><!--//app-menu-->
-			    </nav><!--//app-nav-->
-			    
-				<div class="app-sidepanel-footer">
-				    <nav class="app-nav app-nav-footer">
-					    <ul class="app-menu footer-menu list-unstyled">
-						    <li class="nav-item">
-						        <a class="nav-link" href="/info">
-							        <span class="nav-icon">
-										<i class="fa fa-info"></i>
-									</span>
-			                        <span class="nav-link-text">Help &amp; FAQ</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-						    <li class="nav-item">
-						        <a class="nav-link" href="/settings">
-							        <span class="nav-icon">
-										<i class="fa fa-cogs"></i>
-									</span>
-			                        <span class="nav-link-text">Settings</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-						    <li class="nav-item">
-						        <a class="nav-link" href="{{ url_for('index') }}">
-							        <span class="nav-icon">
-										<i class="fa fa-home"></i>
-									</span>
-			                        <span class="nav-link-text">Home</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-					    </ul><!--//footer-menu-->
-				    </nav>
-			    </div><!--//app-sidepanel-footer-->
-		       
-	        </div><!--//sidepanel-inner-->
-	    </div><!--//app-sidepanel-->
-    </header><!--//app-header-->
+    {% set active_page = 'trades' %}
+    {% include "_header.html" %}
     
     <div class="app-wrapper">
 	    <div class="container-xl">
 			<div class="app-content pt-3 p-md-3 p-lg-4">
 				<div class="col-auto">
-					<h1 class="app-page-title mb-0">Enter A New Trade</h1>
+					<h1 class="app-page-title mb-0">{{ t('add_trade.title') }}</h1>
 					<br>
 				</div>
 				<form method="POST" action="{{ url_for('add_trade') }}" class="row g-3">
 					<!-- Date -->
 					<div class="col-md-4">
-						<label for="date" class="form-label">Date</label>
+						<label for="date" class="form-label">{{ t('common.date') }}</label>
 						<input type="date" id="date" name="date" class="form-control" required>
 					</div>
 
 					<!-- Ticker -->
 					<div class="col-md-4">
-						<label for="ticker" class="form-label">Ticker</label>
+						<label for="ticker" class="form-label">{{ t('common.ticker') }}</label>
 						<input type="text" id="ticker" name="ticker" class="form-control" required>
 					</div>
 
 					<!-- Currency -->
 					<div class="col-md-4">
-						<label for="currency" class="form-label">Currency</label>
+						<label for="currency" class="form-label">{{ t('common.currency') }}</label>
 						<select id="currency" name="currency" class="form-select" required>
-							<option value="" disabled selected>Select currency</option>
+							<option value="" disabled selected>{{ t('common.select_currency') }}</option>
 							{% for ccy in currencies %}
 								<option value="{{ ccy }}">{{ ccy }} {{ currency_icons[ccy] }}</option>
 							{% endfor %}
@@ -154,9 +61,9 @@
 
 					<!-- Exchange -->
 					<div class="col-md-4">
-						<label for="exchange" class="form-label">Exchange</label>
+						<label for="exchange" class="form-label">{{ t('common.exchange') }}</label>
 						<select id="exchange" name="exchange" class="form-select" required>
-							<option value="" disabled selected>Select exchange</option>
+							<option value="" disabled selected>{{ t('common.select_exchange') }}</option>
 							{% for exch in exchanges %}
 								<option value="{{ exch }}">{{ exchange_names[exch] }}</option>
 							{% endfor %}
@@ -165,15 +72,15 @@
 
 					<!-- FX (optional) -->
 					<div class="col-md-4">
-						<label for="fx" class="form-label">FX (Base Currency ÷ Asset Currency) (optional)</label>
+						<label for="fx" class="form-label">{{ t('common.fx_optional') }}</label>
 						<input type="number" step="any" id="fx" name="fx" class="form-control">
 					</div>
 
 					<!-- Type -->
 					<div class="col-md-4">
-						<label for="type" class="form-label">Type</label>
+						<label for="type" class="form-label">{{ t('common.type') }}</label>
 						<select id="type" name="type" class="form-select" required>
-							<option value="" disabled selected>Select Trade Type</option>
+							<option value="" disabled selected>{{ t('add_trade.type_select') }}</option>
 							<option value="BUY">BUY</option>
 							<option value="SELL">SELL</option>
 							<option value="SELL">ADJUSTMENT</option>
@@ -182,36 +89,36 @@
 
 					<!-- Quantity -->
 					<div class="col-md-4">
-						<label for="quantity" class="form-label">Quantity</label>
+						<label for="quantity" class="form-label">{{ t('common.quantity') }}</label>
 						<input type="number" step="any" id="quantity" name="quantity" class="form-control" required>
 					</div>
 
 					<!-- Price -->
 					<div class="col-md-4">
-						<label for="price" class="form-label">Price</label>
+						<label for="price" class="form-label">{{ t('common.price') }}</label>
 						<input type="number" step="any" id="price" name="price" class="form-control" required>
 					</div>
 
 					<!-- Fees -->
 					<div class="col-md-4">
-						<label for="fees" class="form-label">Fees</label>
+						<label for="fees" class="form-label">{{ t('common.fees') }}</label>
 						<input type="number" step="any" id="fees" name="fees" class="form-control" required>
 					</div>
 
 					<!-- Note (optional) -->
 					<div class="col-12">
-						<label for="note" class="form-label">Note (optional)</label>
+						<label for="note" class="form-label">{{ t('common.note_optional') }}</label>
 						<textarea id="note" name="note" class="form-control" rows="2"></textarea>
 					</div>
 
 					<!-- Submit button -->
 					<div class="col-md-2">
-						<button type="submit" class="btn app-btn-primary">Add Trade</button>
+						<button type="submit" class="btn app-btn-primary">{{ t('add_trade.submit') }}</button>
 					</div>
 
-					<div class="col-md-2">						    
+					<div class="col-md-2">
 					<a class="btn app-btn-secondary" href="/trades">
-						Cancel
+						{{ t('common.cancel') }}
 					</a>
 				</div>
 
@@ -220,13 +127,7 @@
 			</div>
 		</div>
 	    
-	    <footer class="app-footer">
-		    <div class="container text-center py-3">
-		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
-		       
-		    </div>
-	    </footer><!--//app-footer-->
+	    {% include "_footer.html" %}
     </div><!--//app-wrapper-->    					
 
 

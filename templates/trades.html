@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="{{ html_lang }}"> 
 <head>
-    <title>Sharefolio - Trades</title>
+    <title>Sharefolio - {{ t('trades.title') }}</title>
     
     <!-- Meta -->
     <meta charset="utf-8">
@@ -25,108 +25,15 @@
 </head> 
 
 <body class="app">   	
-    <header class="app-header fixed-top">	   	            
-        <div class="app-header-inner">  
-	        <div class="container-fluid py-2">
-		        <div class="app-header-content"> 
-				    <div class="col-auto">
-					    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
-						    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img"><title>Menu</title><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-					    </a>
-				    </div>
-		        </div><!--//row-->
-	            </div><!--//app-header-content-->
-	        </div><!--//container-fluid-->
-        </div><!--//app-header-inner-->
-        <div id="app-sidepanel" class="app-sidepanel"> 
-	        <div id="sidepanel-drop" class="sidepanel-drop"></div>
-	        <div class="sidepanel-inner d-flex flex-column">
-		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
-		        <div class="app-branding">
-		            <a class="app-logo loading" href="/portfolio"><span class="logo-text">Sharefolio</span></a>
-		        </div><!--//app-branding-->  
-		        
-			    <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
-				    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
-					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link loading" href="{{ url_for('portfolio') }}">
-						        <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span>
-		                        <span class="nav-link-text">Portfolio</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
-					    
-					    <li class="nav-item">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link loading" href="{{ url_for('holdings') }}">
-								<span class="nav-icon" href><i class="fa-solid fa-hand-holding-dollar"></i></span>
-		                         <span class="nav-link-text">Holdings</span>
-					        </a><!--//nav-link-->
-					    </li><!--//nav-item-->
-						<li class="nav-item has-submenu">
-					        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
-						        <span class="nav-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
-		                         <span class="nav-link-text">Transactions</span>
-		                         <span class="submenu-arrow">
-		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-	</svg>
-	                             </span><!--//submenu-arrow-->
-					        </a><!--//nav-link-->
-					        <div id="submenu-1" class="show submenu submenu-1" data-bs-parent="#menu-accordion">
-						        <ul class="submenu-list list-unstyled">
-							        <li class="submenu-item"><a class="submenu-link active loading" href="{{ url_for('trades') }}">Trades</a></li>
-							        <li class="submenu-item"><a class="submenu-link loading" href="{{ url_for('incomes') }}">Incomes</a></li>
-						        </ul>
-					        </div>
-					    </li><!--//nav-item-->
-						
-						
-				    </ul><!--//app-menu-->
-			    </nav><!--//app-nav-->
-			    
-				<div class="app-sidepanel-footer">
-				    <nav class="app-nav app-nav-footer">
-					    <ul class="app-menu footer-menu list-unstyled">
-						    <li class="nav-item">
-						        <a class="nav-link" href="/info">
-							        <span class="nav-icon">
-										<i class="fa fa-info"></i>
-									</span>
-			                        <span class="nav-link-text">Help &amp; FAQ</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-						    <li class="nav-item">
-						        <a class="nav-link" href="/settings">
-							        <span class="nav-icon">
-										<i class="fa fa-cogs"></i>
-									</span>
-			                        <span class="nav-link-text">Settings</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-						    <li class="nav-item">
-						        <a class="nav-link" href="{{ url_for('index') }}">
-							        <span class="nav-icon">
-										<i class="fa fa-home"></i>
-									</span>
-			                        <span class="nav-link-text">Home</span>
-						        </a><!--//nav-link-->
-						    </li><!--//nav-item-->
-					    </ul><!--//footer-menu-->
-				    </nav>
-			    </div><!--//app-sidepanel-footer-->
-		       
-	        </div><!--//sidepanel-inner-->
-	    </div><!--//app-sidepanel-->
-    </header><!--//app-header-->
+    {% set active_page = 'trades' %}
+    {% include "_header.html" %}
     
     <div class="app-wrapper">
 	    <div class="container-xl">
 			<div class="app-content pt-3 p-md-3 p-lg-4">
 				<div class="row g-3 mb-4 align-items-center justify-content-between">
 				    <div class="col-auto">
-			            <h1 class="app-page-title mb-0">Trades</h1>
+			            <h1 class="app-page-title mb-0">{{ t('trades.title') }}</h1>
 				    </div>
 				    <div class="col-auto">
 					     <div class="page-utilities">
@@ -134,23 +41,23 @@
 							    <div class="col-auto">
 								    <form class="table-search-form row gx-1 align-items-center" method="GET" action="{{ url_for('trades') }}">
 					                    <div class="col-auto">
-					                        <input type="text" id="search-orders" name="keyword" class="form-control search-orders" placeholder="Search" value="{{ request.args.get('keyword', '') }}">
+					                        <input type="text" id="search-orders" name="keyword" class="form-control search-orders" placeholder="{{ t('trades.search_placeholder') }}" value="{{ request.args.get('keyword', '') }}">
 					                    </div>
 					                    <div class="col-auto">
-					                        <button type="submit" class="btn app-btn-secondary">Search</button>
+					                        <button type="submit" class="btn app-btn-secondary">{{ t('common.search') }}</button>
 					                    </div>
 					                    {% if request.args.get('keyword', '') %}
 					                    <div class="col-auto">
-					                        <a href="{{ url_for('trades') }}" class="btn app-btn-secondary"><i class="fa fa-times me-1"></i>Clear</a>
+					                        <a href="{{ url_for('trades') }}" class="btn app-btn-secondary"><i class="fa fa-times me-1"></i>{{ t('common.clear') }}</a>
 					                    </div>
 					                    {% endif %}
 					                </form>
-					                
+
 							    </div><!--//col-->
 							    <div class="col-auto">
 								    <a class="btn app-btn-primary" href="/addtrade">
 										<i width="1em" height="1em" viewBox="0 0 16 16" class="fa fa-plus"></i>
-										New Trade
+										{{ t('trades.new') }}
 									</a>
 							    </div>
 							    <form method="POST" action="/uploadtrades" enctype="multipart/form-data" id="upload-form" style="display: none;">
@@ -163,7 +70,7 @@
 											<path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
 											<path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
 										</svg>
-										Upload CSV
+										{{ t('common.upload_csv') }}
 									</a>
 								</div>
 							    <div class="col-auto">
@@ -172,7 +79,7 @@
 											<path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
 											<path fill-rule="evenodd" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
 										</svg>
-									    Save CSV
+									    {{ t('common.save_csv') }}
 									</a>
 							    </div>
 						    </div><!--//row-->
@@ -200,17 +107,17 @@
 								<thead>
 									<tr>
 										<th class="cell" hidden>id</th>
-										<th class="cell">Date</th>
-										<th class="cell">Ticker</th>
-										<th class="cell">Exchange</th>
-										<th class="cell">Currency</th>
-										<th class="cell">FX</th>
-										<th class="cell">Type</th>
-										<th class="cell">Quantity</th>
-										<th class="cell">Price</th>
-										<th class="cell">Fees</th>
-										<th class="cell">Proceeds</th>
-										<th class="cell">Note</th>
+										<th class="cell">{{ t('common.date') }}</th>
+										<th class="cell">{{ t('common.ticker') }}</th>
+										<th class="cell">{{ t('common.exchange') }}</th>
+										<th class="cell">{{ t('common.currency') }}</th>
+										<th class="cell">{{ t('common.fx') }}</th>
+										<th class="cell">{{ t('common.type') }}</th>
+										<th class="cell">{{ t('common.quantity') }}</th>
+										<th class="cell">{{ t('common.price') }}</th>
+										<th class="cell">{{ t('common.fees') }}</th>
+										<th class="cell">{{ t('common.proceeds') }}</th>
+										<th class="cell">{{ t('common.note') }}</th>
 										<th class="cell"></th>
 									</tr>
 								</thead>
@@ -241,7 +148,7 @@
 											<td class="cell">{{ "{:,.2f}".format(trade.price * -trade.quantity - trade.fees | round(2)) }}</td>
 										{% endif %}
 										<td class="cell">{{ trade.note or '' }}</td>
-										<td class="cell"><a class="btn-sm app-btn-secondary loading" href="/trades/edit/{{ trade.id }}">Edit</a></td>
+										<td class="cell"><a class="btn-sm app-btn-secondary loading" href="/trades/edit/{{ trade.id }}" style="white-space:nowrap;">{{ t('common.edit') }}</a></td>
 									</tr>
 									{% endfor %}
 								</tbody>
@@ -253,13 +160,7 @@
 			</div>
 		</div>
 	    
-	    <footer class="app-footer">
-		    <div class="container text-center py-3">
-		         <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Developed by <a class="app-link" href="https://www.linkedin.com/in/ivan-yeh-58367122b/" target="_blank">Ivan Yeh</a></small><br><small class="text-muted" style="opacity:0.55;">Prices may be delayed up to 30 minutes.</small>
-		       
-		    </div>
-	    </footer><!--//app-footer-->
+	    {% include "_footer.html" %}
     </div><!--//app-wrapper-->    					
 
 
